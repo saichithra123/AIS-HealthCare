@@ -1,0 +1,98 @@
+.policy-field-label {
+  font-weight: 500;
+  color: #757575; 
+  margin-bottom: 4px;
+}
+
+.policy-textfield {
+  margin: 4px 0;
+  opacity: 1;
+}
+
+.policy-textfield .MuiOutlinedInput-root {
+  border-radius: 20px;
+  box-shadow: inset 0px 3px 18px #e0e0e0; 
+  height: 40px;
+  padding: 0 8px;
+  color: #000;
+  background-color: #ffffff; 
+}
+
+.policy-upload {
+  display: flex;
+  align-items: center;
+  margin: 4px 0;
+  border: none;          
+  border-radius: 0;      
+  box-shadow: none;      
+  height: 40px;
+  padding: 0 16px;
+  overflow: hidden;
+  cursor: pointer;
+  background-color: #e4e0e0; /
+}
+
+.MuiMenu-paper {
+  border-radius: 20px !important;       
+  background-color: #ffffff !important; 
+  overflow: hidden !important;          
+  box-shadow: 0px 3px 18px #e0e0e0 !important; 
+}
+
+.attchmentsContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+	width: max-content;
+    padding: 16px;
+    background: #EBEBEB 0% 0% no-repeat padding-box;
+    border-radius: 6px;
+    opacity: 1;
+    height: 23px;
+    cursor: pointer;
+}
+
+.attachmentContainer {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 24px;
+    row-gap: 8px;
+	margin-top: 16px;
+}
+
+.attachmentItem {
+    display: flex;
+    justify-content: space-between;
+    background: #ffffff 0% 0% no-repeat padding-box;
+    border: 1px solid #CCCCCC;
+    border-radius: 6px;
+    opacity: 1;
+    padding: 5px;
+    width: 230px;
+}
+
+.imageContainer {
+    display: flex;
+    column-gap: 12px;
+    align-items: center;
+}
+
+.attchmentImage {
+    width: 50px;
+    height: 35px;
+    border-radius: 8px;
+}
+
+.attachmentTextStyle {
+    font-weight: 500 !important;
+    color: #4C8B92;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.imageDownload {
+    display: flex;
+    align-items: center;
+    margin-right: 8px;
+    cursor: pointer;
+}

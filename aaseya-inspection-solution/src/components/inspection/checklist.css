@@ -1,0 +1,208 @@
+.typographyFontWeight {
+    font-weight: 500 !important;
+}
+
+.headingFontWeight {
+    font-weight: 600 !important;
+}
+
+.attachmentTextStyle {
+    font-weight: 500 !important;
+    color: #4C8B92;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.categoryContainer {
+    background: #F2F6F6 0% 0% no-repeat padding-box;
+    box-shadow: 0px 1px 4px #00000029;
+    border-radius: 10px;
+    opacity: 1;
+    height: 425px;
+    padding-top: 24px;
+    padding-bottom: 24px;
+}
+
+.categoryItems {
+    padding: 8px 16px 8px 32px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+}
+
+.inspectionReportItem {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.checklistContainer {
+    background: #ffffff 0% 0% no-repeat padding-box;
+    opacity: 1;
+    max-height: 425px;
+    height: 100%;
+    overflow: auto;
+    scrollbar-width: none;
+}
+
+.categoryChecklistContainer {
+    border: 1px solid #EBEBEB;
+    border-radius: 10px;
+    padding: 0px 24px;
+}
+
+.choiceButton{
+    color: #00060A !important;
+    text-transform: none;
+    border: 1px solid #CCCCCC !important;
+    border-radius: 20px !important;
+    flex-grow: 1;
+    height: 40px;
+    max-width: 230px;
+}
+
+.choiceButton:hover {
+    border: 1px solid #CCCCCC;
+}
+
+.attchmentsContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    background: #EBEBEB 0% 0% no-repeat padding-box;
+    border-radius: 6px;
+    opacity: 1;
+    height: 23px;
+    cursor: pointer;
+}
+
+.attachmentContainer {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 24px;
+    row-gap: 8px;
+}
+
+.attachmentItem {
+    display: flex;
+    justify-content: space-between;
+    background: #ffffff 0% 0% no-repeat padding-box;
+    border: 1px solid #CCCCCC;
+    border-radius: 6px;
+    opacity: 1;
+    padding: 5px;
+    width: 230px;
+}
+
+.attchmentImage {
+    width: 50px;
+    height: 35px;
+    border-radius: 8px;
+}
+
+.imageContainer {
+    display: flex;
+    column-gap: 12px;
+    align-items: center;
+}
+
+.imageDownload {
+    display: flex;
+    align-items: center;
+    margin-right: 8px;
+    cursor: pointer;
+}
+
+.multilineInput .MuiInputBase-root {
+    border-radius: 10px;
+}
+
+.multilineInput .MuiOutlinedInput-root.Mui-focused fieldset{
+    border: 1px solid #CCCCCC;
+    border-radius: 10px;
+}
+
+.correctiveActionField .MuiInputBase-root {
+    border-radius: 6px;
+}
+
+.correctiveActionField .MuiOutlinedInput-root.Mui-focused fieldset {
+    border: 1px solid #CCCCCC;
+    border-radius: 6px;
+}
+
+.correctiveActionContainer {
+    background: #ffffff 0% 0% no-repeat padding-box;
+    box-shadow: 2px 1px 4px #00000029;
+    border-radius: 6px;
+    opacity: 1;
+    padding: 8px 24px;
+}
+
+.correctiveActions {
+    background: #ffffff 0% 0% no-repeat padding-box;
+    border: 1px solid #EBEBEB;
+    border-radius: 6px;
+    opacity: 1;
+    padding: 12px;
+    margin-bottom: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.iconContainer {
+    box-shadow: 0px 1px 3px #00000029;
+    border-radius: 0px 0px 10px 10px;
+    opacity: 1;
+    width: 100px;
+    display: flex;
+    justify-content: center;
+    column-gap: 8px;
+    margin-left: 80%;
+}
+
+.saveButton {
+    border: 1px solid #4C8B92 !important;
+    border-radius: 20px !important;
+    width: 100px;
+    height: 40px;
+    color: #4C8B92 !important;
+}
+
+.nextSubmitButton {
+    background-color: #4C8B92 !important;
+    border-radius: 20px !important;
+    width: 100px;
+    height: 40px;
+}
+
+.recommendedActionsContainer {
+    border: 1px solid #EBEBEB;
+    border-radius: 10px;
+    padding: 24px;
+}
+
+.dateField .MuiInputBase-root {
+    border-radius: 20px;
+    height: 40px;
+}
+
+.dateField .MuiOutlinedInput-root.Mui-focused fieldset {
+    border: 1px solid #CCCCCC;
+    border-radius: 20px;
+}
+
+.newCaseFields .MuiInputBase-root {
+    border-radius: 20px ;
+    box-shadow: inset 0px 3px 6px #00000029;
+    border: 1px solid #CCCCCC;
+    height: 40px;
+    color: black !important;
+}
+
+.newCaseFields .MuiOutlinedInput-root.Mui-focused fieldset {
+    border: 1px solid #CCCCCC;
+    border-radius: 20px;
+}

@@ -1,0 +1,15 @@
+.headerText {
+    color: #4C8B92 !important;
+    font-weight: 600 !important;
+}
+
+.mobileTopbar {
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #C5DBDE;
+    padding: 8px 16px;
+    justify-content: space-between;
+    align-items: center;
+    position:fixed;
+    top:0px;
+    z-index: 1000;
+}

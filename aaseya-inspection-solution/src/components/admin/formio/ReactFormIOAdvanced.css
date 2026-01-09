@@ -1,0 +1,249 @@
+.formio-component .choices__inner {
+  width: 100%;
+  min-height: 40px;
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  border: 1px solid #CCCCCC !important;
+  box-shadow: inset 0px 3px 6px #00000029;
+  border-radius: 20px;
+  opacity: 1;
+  padding: 8px 12px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  cursor: text;
+}
+
+.formio-component .choices__input {
+  border: none !important;
+  outline: none;
+  font-size: 14px;
+  background: transparent;
+  padding: 4px 8px;
+  box-shadow: none !important;
+  margin-top: 2px;
+}
+
+.formio-component .choices__list--multiple .choices__item {
+  background-color: #E6EFF0 !important;
+  border-radius: 12px;
+  padding: 4px 10px;
+  margin: 4px 6px 4px 0;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  color: #000000;
+}
+
+.formio-component .choices__list--multiple .choices__item .choices__button {
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l8 8M9 1L1 9' stroke='black' stroke-width='2'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: 10px 10px;
+  width: 12px;
+  height: 12px;
+  display: inline-block;
+  text-indent: -9999px;
+  border: none;
+  padding: 0;
+  margin-left: 8px;
+  cursor: pointer;
+}
+
+.formio-component .choices__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.formio-component .choices__list--multiple {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  margin: 0;
+}
+
+.formio-component .address-autocomplete-container {
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.formio-component .address-autocomplete-container input.form-control {
+  width: 100%;
+  height: 40px;
+  background: #FFFFFF;
+  border: 1px solid #CCCCCC;
+  box-shadow: inset 0px 3px 6px #00000029;
+  border-radius: 20px;
+  padding: 8px 12px;
+  font-size: 14px;
+  outline: none;
+}
+
+.formio-component input.flatpickr-input:not([type="hidden"]) {
+  width: 350px;
+  height: 40px;
+  background: #FFFFFF;
+  border: 1px solid #CCCCCC;
+  box-shadow: inset 0px 3px 6px #00000029;
+  border-radius: 20px;
+  padding: 8px 12px;
+  font-size: 14px;
+  outline: none;
+  cursor: pointer;
+}
+
+.flatpickr-day.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange,
+.flatpickr-day.selected:focus,
+.flatpickr-day.selected:hover {
+  background: #92C7CF !important;
+  color: #ffffff !important;
+  border-radius: 50%;
+}
+
+.flatpickr-day:hover {
+  background: #E6EFF0;
+  color: #000;
+  border-radius: 50%;
+}
+
+.formio-component select[name="month"].form-control {
+  width: 100%;
+  height: 40px;
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  border: 1px solid #CCCCCC;
+  box-shadow: inset 0px 3px 6px #00000029;
+  border-radius: 20px;
+  opacity: 1;
+  padding: 8px 12px;
+  font-size: 14px;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg fill='black' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+}
+
+.formio-component select[name="month"] option {
+  background-color: #ffffff;
+  color: #000000;
+  font-size: 14px;
+}
+
+.formio-component .table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 14px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.formio-component .table thead th {
+  background-color: #92C7CF;
+  color: #333;
+  text-align: center;
+  padding: 12px;
+  font-weight: 600;
+  border-bottom: 2px solid #ccc;
+}
+
+.formio-component .table tbody td {
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+  vertical-align: middle;
+}
+
+.formio-component .table tbody td:first-child {
+  text-align: left;
+  font-weight: 500;
+  color: #222;
+  background-color: transparent;
+  /* width: 50%; */
+}
+
+.formio-component .table input[type="radio"] {
+  accent-color: #92C7CF;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #92C7CF;
+  outline: none;
+}
+
+.formio-component .table input[type="radio"]:focus {
+  outline: none;
+}
+
+.signature-container {
+  position: relative;
+  width: 350px;
+  height: 200px;
+  display: inline-block;
+}
+
+.signature-container canvas.signature-pad-canvas {
+  width: 100%;
+  height: 100%;
+  background: #FFFFFF;
+  border: 1px solid #CCCCCC;
+  box-shadow: inset 0px 3px 6px #00000029;
+  border-radius: 20px;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.signature-container::after {
+  content: '🧽';
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-size: 18px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  z-index: 2;
+  transition: background 0.2s ease;
+}
+
+.signature-container:hover::after {
+  background-color: #f0f0f0;
+}
+
+.formio-component-day .row {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 16px;
+  align-items: flex-end;
+  margin-top: 12px;
+}
+
+.formio-component-day .col {
+  flex: 1;
+  min-width: 0;
+}
+
+.formio-component-day .col:nth-child(1) {
+  flex: 1;
+}
+
+.formio-component-day .col:nth-child(2) {
+  flex: 1;
+}
+
+.formio-component-day .col:nth-child(3) {
+  flex: 1;
+}

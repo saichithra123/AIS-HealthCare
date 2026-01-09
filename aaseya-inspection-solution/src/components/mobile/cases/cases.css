@@ -1,0 +1,42 @@
+.casesContainer {
+    background-color: #F2F6F6;
+    opacity: 1;
+    padding-top: 20px;
+    height: 100vh;
+}
+
+.headingContainer{
+    background-color:#F2F6F6 ;
+    position:fixed;
+    top:58px;
+    z-index: 999;
+    width: 100%;
+    padding-top: 20px ;
+    padding-bottom: 20px ;
+}
+.caseHeading {
+    display: flex;
+    margin-left: 20px;
+    margin-right: 20px;
+    padding: 4px;
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    box-shadow: 0px 1px 2px #00000029;
+}
+
+.caseTabName{
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    border-radius: 6px;
+    padding: 8px 0px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.casesInnerContainer {
+    /* margin-top: 120px; */
+    background-color: #F2F6F6;
+    overflow: auto;
+    /* scrollbar-width: none; */
+}
