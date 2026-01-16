@@ -1,1 +1,0 @@
-# aaseya-inspection-solution
