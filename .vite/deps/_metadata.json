@@ -1,0 +1,70 @@
+{
+  "hash": "5061c18e",
+  "configHash": "8ebd986a",
+  "lockfileHash": "3af1f0f7",
+  "browserHash": "6bec3b4c",
+  "optimized": {
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "1593871a",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "d9a5b921",
+      "needsInterop": true
+    },
+    "react-router-dom": {
+      "src": "../../node_modules/react-router-dom/dist/index.mjs",
+      "file": "react-router-dom.js",
+      "fileHash": "05bf3494",
+      "needsInterop": false
+    },
+    "@mui/material": {
+      "src": "../../node_modules/@mui/material/esm/index.js",
+      "file": "@mui_material.js",
+      "fileHash": "d859d846",
+      "needsInterop": false
+    },
+    "@mui/icons-material/Facebook": {
+      "src": "../../node_modules/@mui/icons-material/esm/Facebook.js",
+      "file": "@mui_icons-material_Facebook.js",
+      "fileHash": "d9c7c96e",
+      "needsInterop": false
+    },
+    "@mui/icons-material/Instagram": {
+      "src": "../../node_modules/@mui/icons-material/esm/Instagram.js",
+      "file": "@mui_icons-material_Instagram.js",
+      "fileHash": "06606771",
+      "needsInterop": false
+    },
+    "@mui/icons-material/VerifiedUser": {
+      "src": "../../node_modules/@mui/icons-material/esm/VerifiedUser.js",
+      "file": "@mui_icons-material_VerifiedUser.js",
+      "fileHash": "6fd72456",
+      "needsInterop": false
+    },
+    "@mui/icons-material/YouTube": {
+      "src": "../../node_modules/@mui/icons-material/esm/YouTube.js",
+      "file": "@mui_icons-material_YouTube.js",
+      "fileHash": "d1e2485b",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-P7YOETE4": {
+      "file": "chunk-P7YOETE4.js"
+    },
+    "chunk-C6WWHQR7": {
+      "file": "chunk-C6WWHQR7.js"
+    },
+    "chunk-Z4YT5ONR": {
+      "file": "chunk-Z4YT5ONR.js"
+    },
+    "chunk-WYYPSHNY": {
+      "file": "chunk-WYYPSHNY.js"
+    }
+  }
+}
