@@ -28,7 +28,9 @@ const Login = () => {
   const navigate = useNavigate();
 
   // 🔐 KEYCLOAK PASSWORD LOGIN
- const handleLogin = async () => {
+const CLIENT_ID = import.meta.env.VITE_KEYCLOAK_CLIENT_ID;
+
+const handleLogin = async () => {
   if (!email || !password) {
     alert("Please enter username and password");
     return;
@@ -38,46 +40,32 @@ const Login = () => {
 
   const params = new URLSearchParams();
   params.append("grant_type", "password");
-params.append("client_id", "Healthcare");
+  params.append("client_id", CLIENT_ID);
   params.append("username", email.trim());
   params.append("password", password);
 
   const TOKEN_URL = `${import.meta.env.VITE_KEYCLOAK_BASE_URL}/realms/${import.meta.env.VITE_KEYCLOAK_REALM}/protocol/openid-connect/token`;
 
   try {
-    // 🔍 DEBUG (keep for now)
-    console.log("TOKEN_URL:", TOKEN_URL);
-    console.log("PARAMS:", params.toString());
-    console.log("BASE_URL:", import.meta.env.VITE_KEYCLOAK_BASE_URL);
-console.log("REALM:", import.meta.env.VITE_KEYCLOAK_REALM);
-console.log("CLIENT:", import.meta.env.VITE_KEYCLOAK_CLIENT_ID);
-
-
     const response = await fetch(TOKEN_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
-      body: params.toString(), // ✅ THIS WAS THE MAIN BUG
+      body: params.toString(),
     });
 
-    const text = await response.text(); // 👈 important for debugging
-    console.log("Keycloak response:", text);
+    const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(text);
+      throw new Error(data.error_description || "Login failed");
     }
 
-    const data = JSON.parse(text);
-
-    // ✅ STORE TOKENS
     localStorage.setItem("access_token", data.access_token);
     localStorage.setItem("refresh_token", data.refresh_token);
     localStorage.setItem("username", email);
 
-    // ✅ REDIRECT
     navigate("/registration");
-
   } catch (err) {
     console.error("Login error:", err);
     alert("Login failed. Please check credentials");
