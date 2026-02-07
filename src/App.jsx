@@ -3,6 +3,7 @@ import WebPortal from "./components/WebPortal";
 import Login from "./components/Login";
 import Registration from "./components/Registration";
 import UploadDocuments from "./components/UploadDocuments";
+import Workpool from "./components/workpool";
 
 export default function App() {
   const isAuthenticated = !!localStorage.getItem("access_token");
@@ -19,6 +20,8 @@ export default function App() {
       />
       
 <Route path="/upload-documents" element={<UploadDocuments />} />
+      <Route path="/workpool" element={<Workpool />} />
+
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
