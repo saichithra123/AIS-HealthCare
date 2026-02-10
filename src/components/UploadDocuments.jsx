@@ -63,32 +63,42 @@ export default function UploadDocuments() {
 
 const handleSubmit = async () => {
   const token = localStorage.getItem("access_token");
-  const baseUrl = import.meta.env.VITE_API_BASE_URL; // MUST match backend
-
-  const payload = {
-    processInstanceKey: 6755399443491595,
-    detectedLanguages: ["en"],
-    documentsUploaded: 3,
-    isMultiLanguage: false,
-    primaryLanguage: "en",
-    status: "success",
-    documentLanguages: [
-      { language: "en", documentName: files.diagnostic.name },
-      { language: "en", documentName: files.medical.name },
-      { language: "en", documentName: files.policy.name },
-    ],
-  };
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
   try {
+    const formData = new FormData();
+
+    formData.append("files", files.diagnostic);
+    formData.append("files", files.policy);
+    formData.append("files", files.medical);
+
+    const payload = {
+      processInstanceKey: 6755399443491595,
+      detectedLanguages: ["en"],
+      documentsUploaded: 3,
+      isMultiLanguage: false,
+      primaryLanguage: "en",
+      status: "success",
+      documentLanguages: [
+        { language: "en", documentName: files.diagnostic.name },
+        { language: "en", documentName: files.medical.name },
+        { language: "en", documentName: files.policy.name },
+      ],
+    };
+
+    formData.append(
+      "payload",
+      new Blob([JSON.stringify(payload)], { type: "application/json" })
+    );
+
     const response = await fetch(
       `${baseUrl}/healthcare/startHealthCareProcess`,
       {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`, 
         },
-        body: JSON.stringify(payload),
+        body: formData,
       }
     );
 
@@ -103,6 +113,7 @@ const handleSubmit = async () => {
     alert("Failed to start healthcare process");
   }
 };
+
 
 
 
