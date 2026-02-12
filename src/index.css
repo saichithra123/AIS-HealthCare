@@ -1,0 +1,18 @@
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Hide scrollbar but KEEP scrolling */
+html {
+  scrollbar-width: none;        /* Firefox */
+}
+
+html::-webkit-scrollbar {
+  display: none;                /* Chrome, Edge, Safari */
+}
+
+body {
+  margin: 0;
+}
