@@ -11,6 +11,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import logoutIcon from "../assets/logout.svg";
 
 const uploadSections = [
   { id: "diagnostic", label: "Diagnostic Report" },
@@ -52,6 +53,14 @@ export default function UploadDocuments() {
     const file = e.dataTransfer.files[0];
     if (file) handleFileSelect(sectionId, file);
   };
+
+  const handleLogout = () => {
+  localStorage.removeItem("access_token");
+  localStorage.removeItem("refresh_token");
+  localStorage.removeItem("username");
+
+  navigate("/ais/login");
+};
 
   const handleCancel = () => {
     setFiles({
@@ -119,21 +128,46 @@ const handleSubmit = async () => {
 
   return (
     <Box sx={{ minHeight: "100vh", backgroundColor: "#FFFF" }}>
-      
-<Box
+   <Box
   sx={{
-    position: "fixed",        
+    position: "fixed",
     left: 0,
     width: "100%",
-    zIndex: 1200,             
+    zIndex: 1200,
     backgroundColor: "#4C8B92",
-    px: 3,
+    px: 4,
     py: 2,
     display: "flex",
     alignItems: "center",
+    justifyContent: "space-between", // 👈 important
   }}
 >
+  {/* LEFT - LOGO */}
   <Box component="img" src={aaseyaLogo} alt="aaseya" sx={{ height: 32 }} />
+
+  {/* RIGHT - LOGOUT */}
+  <Box
+    onClick={handleLogout}
+    sx={{
+      display: "flex",
+      alignItems: "center",
+      gap: 1,
+      cursor: "pointer",
+    }}
+  >
+    <Box
+      component="img"
+      src={logoutIcon}
+      sx={{ height: 18 }}
+    />
+    <Typography
+      fontSize={14}
+      color="#fff"
+      fontWeight={500}
+    >
+      Logout
+    </Typography>
+  </Box>
 </Box>
 
 
