@@ -20,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 
 import aaseyaLogo from "../assets/Aaseyalogo.svg";
 import cloudUploadIcon from "../assets/Icon awesome-cloud-upload-alt.svg";
+import logoutIcon from "../assets/logout.svg";
 
 const inputStyle = {
   "& .MuiOutlinedInput-root": {
@@ -57,6 +58,14 @@ const inputStyle = {
 const Registration = () => {
   const navigate = useNavigate();
 
+  const handleLogout = () => {
+  localStorage.removeItem("access_token");
+  localStorage.removeItem("refresh_token");
+  localStorage.removeItem("username");
+
+  navigate("/ais/login");
+};
+
   const [claimantName, setClaimantName] = useState("");
   const [claimantType, setClaimantType] = useState("");
   const [relationship, setRelationship] = useState("");
@@ -76,6 +85,7 @@ const Registration = () => {
   setLoadingPolicy(true);
   setPolicyError("");
   setPolicyDetails(null);
+
 
   try {
     const response = await fetch(
@@ -128,9 +138,30 @@ const Registration = () => {
           zIndex: 1200,            // stays above content
         }}
       >
-        <Toolbar>
-          <Box component="img" src={aaseyaLogo} alt="aaseya" sx={{ height: 28 }} />
-        </Toolbar>
+        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+  {/* LEFT - LOGO */}
+  <Box component="img" src={aaseyaLogo} alt="aaseya" sx={{ height: 28 }} />
+
+  {/* RIGHT - LOGOUT */}
+  <Box
+    onClick={handleLogout}
+    sx={{
+      display: "flex",
+      alignItems: "center",
+      gap: 1,
+      cursor: "pointer",
+    }}
+  >
+    <Box
+      component="img"
+      src={logoutIcon}
+      sx={{ height: 18 }}
+    />
+    <Typography color="#fff" fontSize={14}>
+      Logout
+    </Typography>
+  </Box>
+</Toolbar>
       </AppBar>
 
       <Box
