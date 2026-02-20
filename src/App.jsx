@@ -4,7 +4,7 @@ import Login from "./components/Login";
 import Registration from "./components/Registration";
 import UploadDocuments from "./components/UploadDocuments";
 import Workpool from "./components/workpool";
-import Chatbot from "./components/Chatbot";
+// import Chatbot from "./components/Chatbot";
 import ClaimSummary from "./components/ClaimSummary"
 import ClaimReview from "./components/ClaimReview";
 import ClaimChecklist from "./components/ClaimChecklist";
