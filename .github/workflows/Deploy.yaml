@@ -1,4 +1,4 @@
-name: Deploy Frontend to QA Server
+name: Deploy Frontend to QA
 
 on:
   push:
