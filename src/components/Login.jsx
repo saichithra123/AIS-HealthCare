@@ -75,13 +75,13 @@ const Login = () => {
   };
 
   // ---------------- LOGOUT ----------------
-  const handleLogout = () => {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
-    localStorage.removeItem("username");
+  // const handleLogout = () => {
+  //   localStorage.removeItem("access_token");
+  //   localStorage.removeItem("refresh_token");
+  //   localStorage.removeItem("username");
 
-    navigate("/ais/login");
-  };
+  //   navigate("/ais/login");
+  // };
 
   return (
     <Box
@@ -222,13 +222,13 @@ const Login = () => {
 
           {/* LOGOUT BUTTON BELOW FORGOT PASSWORD */}
           <Box textAlign="center" mt={1}>
-            <Button
+            {/* <Button
               size="small"
               onClick={handleLogout}
               sx={{ color: "#5A9BA5", textTransform: "none" }}
             >
               Logout
-            </Button>
+            </Button> */}
           </Box>
         </Box>
       </Box>

@@ -1,8 +1,11 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Facebook from "@mui/icons-material/Facebook";
 import Instagram from "@mui/icons-material/Instagram";
 import VerifiedUser from "@mui/icons-material/VerifiedUser";
 import YouTube from "@mui/icons-material/YouTube";
+import chatbotIcon from "../assets/chatbot.svg";
+import Chatbot from "./Chatbot";
 import {
   Box,
   Button,
@@ -19,9 +22,49 @@ import aaseyaLogo from "../assets/Aaseyalogo.svg";
 export default function WebPortal() {
   const navigate = useNavigate();
   const theme = useTheme();
+  const [openChat, setOpenChat] = useState(false);
+  const [conversationId, setConversationId] = useState(null);
+const [loading, setLoading] = useState(false);
+const [error, setError] = useState(null);
 
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
+
+const startChat = async () => {
+  try {
+    setLoading(true);
+
+    const token = localStorage.getItem("access_token");
+    const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+    const response = await fetch(
+      `${BASE_URL}/api/chat/start`,
+      {
+        method: "POST",
+        headers: {  
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          userMessage: "hi",
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to start chat");
+    }
+
+    const data = await response.json();
+    setConversationId(data.conversationId);
+
+  } catch (err) {
+    console.error(err);
+    setError("Unable to start chatbot.");
+  } finally {
+    setLoading(false);
+  }
+};
   return (
     <Box
       sx={{
@@ -241,6 +284,33 @@ export default function WebPortal() {
           © 2023 — Copyright
         </Typography>
       </Box>
-    </Box>
+     <Box
+  component="img"
+  src={chatbotIcon}
+  alt="Chatbot"
+onClick={async () => {
+  await startChat();
+  setOpenChat(true);
+}}  sx={{
+    position: "fixed",
+    right: "30px",
+    bottom: "20px",
+    height: "65px",
+    width: "65px",
+    cursor: "pointer",
+    zIndex: 9999,
+    transition: "transform 0.2s ease-in-out",
+    "&:hover": {
+      transform: "scale(1.15)",
+    },
+  }}
+/>
+{openChat && (
+  <Chatbot
+    conversationId={conversationId}
+    onClose={() => setOpenChat(false)}
+  />
+)}</Box>
+
   );
 }

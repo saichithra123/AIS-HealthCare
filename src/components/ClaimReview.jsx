@@ -1,4 +1,4 @@
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+// import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   Box,
   Paper,
@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import aaseyaLogo from "../assets/Aaseyalogo.svg";
 import logoutIcon from "../assets/logout.svg";
@@ -21,98 +22,118 @@ export default function ClaimReview() {
   const claim = state?.claimData || {};
 
   const handleLogout = () => {
-  localStorage.removeItem("access_token");
-  localStorage.removeItem("refresh_token");
-  localStorage.removeItem("username");
+    localStorage.clear();
+    navigate("/ais/login");
+  };
 
-  navigate("/ais/login");
-};
   return (
-    <Box sx={{ minHeight: "100vh", backgroundColor: "#fff" }}>
+    <Box sx={{ minHeight: "100vh", backgroundColor: "#F5F7F8" }}>
 
-      {/* HEADER */}
+      {/* ================= HEADER ================= */}
       <Box
-  sx={{
-    position: "fixed",
-    left: 0,
-    width: "100%",
-    zIndex: 1200,
-    backgroundColor: "#4C8B92",
-    px: 4,
-    py: 2,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between", // 👈 important
-  }}
->
-  {/* LEFT - LOGO */}
-  <Box component="img" src={aaseyaLogo} alt="aaseya" sx={{ height: 32 }} />
+        sx={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          zIndex: 1200,
+          backgroundColor: "#4C8B92",
+          px: 4,
+          py: 2,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <Box component="img" src={aaseyaLogo} alt="aaseya" sx={{ height: 32 }} />
 
-  {/* RIGHT - LOGOUT */}
-  <Box
-    onClick={handleLogout}
-    sx={{
-      display: "flex",
-      alignItems: "center",
-      gap: 1,
-      cursor: "pointer",
-    }}
-  >
-    <Box
-      component="img"
-      src={logoutIcon}
-      sx={{ height: 18 }}
-    />
-    <Typography
-      fontSize={14}
-      color="#fff"
-      fontWeight={500}
-    >
-      Logout
-    </Typography>
-  </Box>
-</Box>
+        <Box
+          onClick={handleLogout}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+            cursor: "pointer",
+          }}
+        >
+          <Box component="img" src={logoutIcon} sx={{ height: 18 }} />
+          <Typography fontSize={14} color="#fff" fontWeight={500}>
+            Logout
+          </Typography>
+        </Box>
+      </Box>
 
-      <Box sx={{ maxWidth: "1366px", mx: "auto", px: 4, py: 3 }}>
+      {/* ================= PAGE CONTENT ================= */}
+      <Box
+        sx={{
+          maxWidth: "1366px",
+          mx: "auto",
+          px: 4,
+          pt: 12, // 🔥 IMPORTANT FIX (space for fixed header)
+          pb: 4,
+        }}
+      >
 
         {/* BACK */}
-        <Box
-          sx={{ display: "flex", alignItems: "center", cursor: "pointer", mb: 1 }}
+        <Stack
+          direction="row"
+          spacing={1}
+          alignItems="center"
+          sx={{ cursor: "pointer", mb: 2 }}
           onClick={() => navigate(-1)}
         >
           <ArrowBackIcon fontSize="small" />
           <Typography fontSize={14}>Back</Typography>
-        </Box>
+        </Stack>
 
         {/* TITLE */}
-        <Typography fontSize={28} fontWeight={600} mb={2}>
+        <Typography fontSize={28} fontWeight={600} mb={3}>
           Claim Review - {claimId}
         </Typography>
 
         {/* ================= CLAIM HEADER CARD ================= */}
-        <Paper sx={{ p: 3, borderRadius: "12px", mb: 2 }}>
+        <Paper sx={{ p: 4, borderRadius: 3, mb: 3 }}>
           <Typography fontSize={26} fontWeight={700}>
             {claim.claimantName || "Johnathan Doe"}
           </Typography>
 
-          <Stack direction="row" spacing={6} mt={2}>
+          <Stack
+            direction="row"
+            spacing={8}
+            mt={3}
+            flexWrap="wrap"
+          >
             <Box>
-              <Typography fontSize={12}>Policy Number</Typography>
-              <Typography fontWeight={600}>IN-656947</Typography>
+              <Typography fontSize={12} color="text.secondary">
+                Policy Number
+              </Typography>
+              <Typography fontWeight={600}>
+                {claim.policyNumber || "IN-656947"}
+              </Typography>
             </Box>
 
             <Box>
-              <Typography fontSize={12}>Coverage Type</Typography>
-              <Typography fontWeight={600}>Platinum Care</Typography>
+              <Typography fontSize={12} color="text.secondary">
+                Coverage Type
+              </Typography>
+              <Typography fontWeight={600}>
+                {claim.coverageType || "Platinum Care"}
+              </Typography>
             </Box>
 
             <Box>
-              <Typography fontSize={12}>Sum Insured Covered</Typography>
-              <Typography fontWeight={600}>$50,000.00</Typography>
+              <Typography fontSize={12} color="text.secondary">
+                Sum Insured Covered
+              </Typography>
+              <Typography fontWeight={600}>
+                {claim.sumInsured || "$50,000.00"}
+              </Typography>
             </Box>
 
             <Box>
-              <Typography fontSize={12}>Claim Amount</Typography>
+              <Typography fontSize={12} color="text.secondary">
+                Claim Amount
+              </Typography>
               <Typography fontWeight={600}>
                 {claim.claimAmount || "$24,580.00"}
               </Typography>
@@ -121,82 +142,80 @@ export default function ClaimReview() {
         </Paper>
 
         {/* ================= AI FINDINGS ================= */}
-        <Paper sx={{ p: 3, borderRadius: "12px", mb: 2 }}>
-          <Typography fontSize={18} fontWeight={600} mb={2}>
+        <Paper sx={{ p: 4, borderRadius: 3, mb: 3 }}>
+          <Typography fontSize={18} fontWeight={600} mb={3}>
             AI Intake Findings
           </Typography>
 
-          <Stack direction="row" spacing={2}>
-            <Paper sx={{ flex: 1, p: 2 }}>
+          <Stack direction="row" spacing={3} flexWrap="wrap">
+            <Paper sx={{ flex: 1, p: 3, minWidth: 300 }}>
               <Typography fontWeight={600}>Summary Analysis</Typography>
-              <Typography fontSize={13} mt={1}>
-                Lorem ipsum is simply dummy text of the printing and
-                typesetting industry.
+              <Typography fontSize={14} mt={2} color="text.secondary">
+                {claim.summary ||
+                  "AI detected consistent medical documentation and valid policy coverage."}
               </Typography>
             </Paper>
 
-            <Paper sx={{ flex: 1, p: 2 }}>
-              <Typography fontWeight={600} mb={1}>
+            <Paper sx={{ flex: 1, p: 3, minWidth: 300 }}>
+              <Typography fontWeight={600} mb={2}>
                 Confidence Score
               </Typography>
 
               <LinearProgress
                 variant="determinate"
-                value={90}
-                sx={{
-                  height: 8,
-                  borderRadius: 5,
-                  mb: 1,
-                }}
+                value={claim.confidenceScore || 90}
+                sx={{ height: 8, borderRadius: 5, mb: 1 }}
               />
 
-              <Typography fontSize={13}>90%</Typography>
+              <Typography fontSize={14}>
+                {claim.confidenceScore || 90}%
+              </Typography>
 
-              <Typography mt={2} fontWeight={600}>
+              <Typography mt={3} fontWeight={600}>
                 Flags Detected
               </Typography>
-              <Typography fontSize={13}>• Address verification pending</Typography>
+
+              <Typography fontSize={14} color="text.secondary">
+                {claim.flags || "Address verification pending"}
+              </Typography>
             </Paper>
           </Stack>
         </Paper>
 
         {/* ================= DOCUMENTS ================= */}
-        <Paper sx={{ p: 3, borderRadius: "12px" }}>
-          <Typography fontSize={18} fontWeight={600} mb={2}>
+        <Paper sx={{ p: 4, borderRadius: 3 }}>
+          <Typography fontSize={18} fontWeight={600} mb={3}>
             Uploaded Documents
           </Typography>
 
           <Stack spacing={2}>
-            {["Medical_Form1.pdf", "Policy_Card1.pdf", "Hospital_Bill.pdf"].map(
-              (doc) => (
-                <Paper
-                  key={doc}
-                  sx={{
-                    p: 1.5,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Stack direction="row" spacing={1} alignItems="center">
-                    <InsertDriveFileIcon color="error" />
-                    <Box>
-                      <Typography fontSize={14}>{doc}</Typography>
-                      <Typography fontSize={12} color="gray">
-                        2.4 MB • Oct 12, 2026
-                      </Typography>
-                    </Box>
-                  </Stack>
+            {(claim.documents || [
+              "Medical_Form1.pdf",
+              "Policy_Card1.pdf",
+              "Hospital_Bill.pdf",
+            ]).map((doc, index) => (
+              <Paper
+                key={index}
+                sx={{
+                  p: 2,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Stack direction="row" spacing={2} alignItems="center">
+                  <InsertDriveFileIcon color="error" />
+                  <Typography fontSize={14}>{doc}</Typography>
+                </Stack>
 
-                  <Typography sx={{ cursor: "pointer" }}>⬇</Typography>
-                </Paper>
-              )
-            )}
+                <Typography sx={{ cursor: "pointer" }}>⬇</Typography>
+              </Paper>
+            ))}
           </Stack>
         </Paper>
 
         {/* BUTTONS */}
-        <Stack direction="row" justifyContent="flex-end" spacing={2} mt={3}>
+        <Stack direction="row" justifyContent="flex-end" spacing={2} mt={4}>
           <Button variant="outlined" onClick={() => navigate(-1)}>
             Cancel
           </Button>
@@ -205,7 +224,7 @@ export default function ClaimReview() {
             variant="contained"
             sx={{ backgroundColor: "#4A8F97" }}
             onClick={() =>
-              navigate(`/claim-summary/${claimId}`, {
+              navigate(`/ais/claim-summary/${claimId}`, {
                 state: { claimData: claim },
               })
             }
