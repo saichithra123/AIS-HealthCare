@@ -1,9 +1,10 @@
 import { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import aaseyaLogo from "../assets/Aaseyalogo.svg";
 import cloudUploadIcon from "../assets/Icon awesome-cloud-upload-alt.svg";
-
+import { CircularProgress } from "@mui/material";
 import {
   Box,
   Button,
@@ -27,6 +28,8 @@ export default function UploadDocuments() {
     policy: null,
     medical: null,
   });
+const [submitting, setSubmitting] = useState(false);
+const [error, setError] = useState("");
 
   const handleFileSelect = (sectionId, file) => {
     setFiles((prev) => ({ ...prev, [sectionId]: file }));
@@ -75,6 +78,9 @@ const handleSubmit = async () => {
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
   try {
+    setSubmitting(true);
+    setError("");
+
     const formData = new FormData();
 
     formData.append("files", files.diagnostic);
@@ -97,7 +103,9 @@ const handleSubmit = async () => {
 
     formData.append(
       "payload",
-      new Blob([JSON.stringify(payload)], { type: "application/json" })
+      new Blob([JSON.stringify(payload)], {
+        type: "application/json",
+      })
     );
 
     const response = await fetch(
@@ -105,7 +113,7 @@ const handleSubmit = async () => {
       {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${token}`, 
+          Authorization: `Bearer ${token}`,
         },
         body: formData,
       }
@@ -113,13 +121,12 @@ const handleSubmit = async () => {
 
     if (!response.ok) throw new Error("Process start failed");
 
-    const result = await response.json();
-    console.log("Process Started:", result);
-
     navigate("/workpool");
   } catch (err) {
     console.error(err);
-    alert("Failed to start healthcare process");
+    setError("Failed to start healthcare process");
+  } finally {
+    setSubmitting(false);
   }
 };
 
@@ -309,23 +316,43 @@ const handleSubmit = async () => {
               Cancel
             </Button>
 
-            <Button
-              variant="contained"
-              onClick={handleSubmit}
-              //  disabled={!allDocumentsUploaded}
-              sx={{
-                borderRadius: 8,
-                px: 3,
-                textTransform: "none",
-                backgroundColor: "#4C8B92",
-                color: "#fff",
-              }}
-            >
-              Submit
-            </Button>
+     <Button
+  variant="contained"
+  onClick={handleSubmit}
+  disabled={!allDocumentsUploaded || submitting}
+  sx={{
+    borderRadius: 8,
+    px: 3,
+    textTransform: "none",
+    backgroundColor: "#4C8B92",
+    color: "#fff",
+  }}
+>
+  Submit
+</Button>
           </Stack>
         </Paper>
-      </Box>
+              </Box>
+
+      {submitting && (
+        <Box
+          sx={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            backgroundColor: "rgba(0,0,0,0.4)",
+            zIndex: 2000,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <CircularProgress size={60} sx={{ color: "#fff" }} />
+        </Box>
+      )}
+
     </Box>
   );
 }

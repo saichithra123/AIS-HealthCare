@@ -1,3 +1,241 @@
+// import { useNavigate, useParams } from "react-router-dom";
+// import {
+//   Box,
+//   Paper,
+//   Typography,
+//   Stack,
+//   Button,
+//   Radio,
+//   RadioGroup,
+//   FormControlLabel,
+//   TextField,
+// } from "@mui/material";
+// import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+// import aaseyaLogo from "../assets/Aaseyalogo.svg";
+// import logoutIcon from "../assets/logout.svg";
+// import { useState, useEffect } from "react";
+
+// export default function FinanceReview() {
+//   const navigate = useNavigate();
+//   const { claimId } = useParams();
+
+//   const [decision, setDecision] = useState("");
+//   const [comments, setComments] = useState("");
+//   const [financeData, setFinanceData] = useState(null);
+//   const [loading, setLoading] = useState(true);
+
+//   const baseUrl = import.meta.env.VITE_API_BASE_URL;
+//   const token = localStorage.getItem("access_token");
+
+//   const handleLogout = () => {
+//     localStorage.clear();
+//     navigate("/ais/login");
+//   };
+
+//   /* ================= FETCH FINANCE OVERVIEW ================= */
+//   useEffect(() => {
+//     const fetchFinanceOverview = async () => {
+//       try {
+//         const response = await fetch(
+//           `${baseUrl}/healthcare/finance/review/${claimId}`,
+//           {
+//             method: "GET",
+//             headers: {
+//               Authorization: `Bearer ${token}`,
+//               "Content-Type": "application/json",
+//             },
+//           }
+//         );
+
+//         if (!response.ok) {
+//           throw new Error("Finance overview fetch failed");
+//         }
+
+//         const data = await response.json();
+//         console.log("Finance Overview:", data);
+
+//         setFinanceData(data);
+//       } catch (error) {
+//         console.error("Finance overview error:", error);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchFinanceOverview();
+//   }, [claimId, token, baseUrl]);
+
+//   /* ================= SUBMIT FINANCE DECISION ================= */
+//   const handleSubmit = async () => {
+//     if (!decision) {
+//       alert("Please select approve or reject");
+//       return;
+//     }
+
+//     try {
+//       const response = await fetch(
+//         `${baseUrl}/healthcare/claims/${claimId}/finance-decision`,
+//         {
+//           method: "POST",
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//             "Content-Type": "application/json",
+//           },
+//           body: JSON.stringify({
+//             decision: decision.toUpperCase(),
+//             comment: comments,
+//           }),
+//         }
+//       );
+
+//       if (!response.ok) {
+//         throw new Error("Finance decision failed");
+//       }
+
+//       console.log("Finance decision submitted");
+
+//       navigate("/ais/workpool");
+
+//     } catch (error) {
+//       console.error("Finance decision error:", error);
+//       alert("Submission failed");
+//     }
+//   };
+
+//   if (loading) {
+//     return <Typography sx={{ p: 5 }}>Loading...</Typography>;
+//   }
+
+//   if (!financeData) {
+//     return <Typography sx={{ p: 5 }}>No data found</Typography>;
+//   }
+
+//   return (
+//     <Box sx={{ minHeight: "100vh", backgroundColor: "#fff" }}>
+
+//       {/* HEADER */}
+//       <Box
+//         sx={{
+//           position: "fixed",
+//           width: "100%",
+//           zIndex: 1200,
+//           backgroundColor: "#4C8B92",
+//           px: 4,
+//           py: 2,
+//           display: "flex",
+//           justifyContent: "space-between",
+//         }}
+//       >
+//         <Box component="img" src={aaseyaLogo} sx={{ height: 32 }} />
+//         <Box onClick={handleLogout} sx={{ cursor: "pointer", color: "#fff" }}>
+//           Logout
+//         </Box>
+//       </Box>
+
+//       <Box sx={{ maxWidth: "1200px", mx: "auto", px: 4, py: 10 }}>
+
+//         <Box
+//           sx={{ display: "flex", alignItems: "center", cursor: "pointer", mb: 2 }}
+//           onClick={() => navigate(-1)}
+//         >
+//           <ArrowBackIcon fontSize="small" />
+//           <Typography fontSize={14}>Back</Typography>
+//         </Box>
+
+//         <Typography fontSize={22} fontWeight={600} mb={3}>
+//           Financial Cost & Policy Review - {claimId}
+//         </Typography>
+
+//         {/* FINANCIAL OVERVIEW */}
+//         <Paper sx={{ p: 3, mb: 3 }}>
+//           <Typography fontWeight={600} mb={2}>
+//             Financial Overview
+//           </Typography>
+
+//           <Stack direction="row" spacing={3}>
+//             <Box>
+//               <Typography fontSize={12}>Estimated Total Cost</Typography>
+//               <Typography fontWeight={700}>
+//                 {financeData.estimatedTotalCost}
+//               </Typography>
+//             </Box>
+
+//             <Box>
+//               <Typography fontSize={12}>Policy Sum Insured</Typography>
+//               <Typography fontWeight={700}>
+//                 {financeData.policySumInsured}
+//               </Typography>
+//             </Box>
+
+//             <Box>
+//               <Typography fontSize={12}>Available Balance</Typography>
+//               <Typography fontWeight={700}>
+//                 {financeData.availableBalance}
+//               </Typography>
+//             </Box>
+//           </Stack>
+//         </Paper>
+
+//         {/* CLAIM SUMMARY */}
+//         <Paper sx={{ p: 3, mb: 3 }}>
+//           <Typography fontWeight={600} mb={2}>
+//             Claim Summary
+//           </Typography>
+
+//           <Typography><strong>Full Name:</strong> {financeData.fullName}</Typography>
+//           <Typography><strong>Hospital:</strong> {financeData.hospitalName}</Typography>
+//           <Typography><strong>Treatment:</strong> {financeData.treatmentType}</Typography>
+//           <Typography><strong>Admission Date:</strong> {financeData.admissionDate}</Typography>
+//           <Typography><strong>Policy Number:</strong> {financeData.policyNumber}</Typography>
+//           <Typography><strong>Reviewing Manager:</strong> {financeData.reviewingManager}</Typography>
+//         </Paper>
+
+//         {/* FINANCE DECISION */}
+//         <Paper sx={{ p: 3 }}>
+//           <Typography fontWeight={600} mb={2}>
+//             Finance Officer Decision
+//           </Typography>
+
+//           <RadioGroup
+//             row
+//             value={decision}
+//             onChange={(e) => setDecision(e.target.value)}
+//           >
+//             <FormControlLabel value="approve" control={<Radio />} label="Approve" />
+//             <FormControlLabel value="reject" control={<Radio />} label="Reject" />
+//           </RadioGroup>
+
+//           <TextField
+//             fullWidth
+//             size="small"
+//             placeholder="Comments"
+//             value={comments}
+//             onChange={(e) => setComments(e.target.value)}
+//             sx={{ mt: 2 }}
+//           />
+
+//           <Stack direction="row" justifyContent="flex-end" spacing={2} mt={3}>
+//             <Button variant="outlined" onClick={() => navigate(-1)}>
+//               Cancel
+//             </Button>
+
+//             <Button
+//               variant="contained"
+//               onClick={handleSubmit}
+//               sx={{
+//                 backgroundColor: "#4A8F97",
+//                 "&:hover": { backgroundColor: "#3B7D84" },
+//               }}
+//             >
+//               Submit
+//             </Button>
+//           </Stack>
+//         </Paper>
+
+//       </Box>
+//     </Box>
+//   );
+// }
 import { useNavigate, useParams } from "react-router-dom";
 import {
   Box,
@@ -12,225 +250,218 @@ import {
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import aaseyaLogo from "../assets/Aaseyalogo.svg";
-import { useState } from "react";
-import logoutIcon from "../assets/logout.svg";
+import { useState, useEffect } from "react";
 
 export default function FinanceReview() {
   const navigate = useNavigate();
   const { claimId } = useParams();
+
   const [decision, setDecision] = useState("");
   const [comments, setComments] = useState("");
-  const handleLogout = () => {
-  localStorage.removeItem("access_token");
-  localStorage.removeItem("refresh_token");
-  localStorage.removeItem("username");
+  const [financeData, setFinanceData] = useState(null);
 
-  navigate("/ais/login");
-};
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+  const token = localStorage.getItem("access_token");
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/ais/login");
+  };
+
+  /* ================= FETCH FINANCE OVERVIEW ================= */
+  useEffect(() => {
+    if (!token) {
+      handleLogout();
+      return;
+    }
+
+    const fetchFinanceOverview = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const response = await fetch(
+          `${baseUrl}/healthcare/finance/review/${claimId}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.status === 401) {
+          handleLogout();
+          return;
+        }
+
+        if (!response.ok) {
+          throw new Error("Finance overview fetch failed");
+        }
+
+        const data = await response.json();
+        setFinanceData(data);
+      } catch (err) {
+        console.error("Finance overview error:", err);
+        setError("Failed to load finance review");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFinanceOverview();
+  }, [claimId, token, baseUrl]);
+
+  /* ================= SUBMIT FINANCE DECISION ================= */
+  const handleSubmit = async () => {
+    if (!decision) {
+      alert("Please select approve or reject");
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+
+      const response = await fetch(
+        `${baseUrl}/healthcare/claims/${claimId}/finance-decision`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            decision,        // APPROVE or REJECT
+            comment: comments,
+          }),
+        }
+      );
+
+      if (response.status === 401) {
+        handleLogout();
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error("Finance decision failed");
+      }
+
+      navigate("/ais/workpool");
+    } catch (err) {
+      console.error("Finance decision error:", err);
+      alert("Submission failed");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  /* ================= RENDER STATES ================= */
+
+  if (loading) {
+    return <Typography sx={{ p: 5 }}>Loading...</Typography>;
+  }
+
+  if (error) {
+    return (
+      <Typography sx={{ p: 5, color: "red" }}>
+        {error}
+      </Typography>
+    );
+  }
+
+  if (!financeData) {
+    return <Typography sx={{ p: 5 }}>No data found</Typography>;
+  }
 
   return (
     <Box sx={{ minHeight: "100vh", backgroundColor: "#fff" }}>
-      
-      {/* ================= FIXED HEADER ================= */}
-      <Box
-  sx={{
-    position: "fixed",
-    left: 0,
-    width: "100%",
-    zIndex: 1200,
-    backgroundColor: "#4C8B92",
-    px: 4,
-    py: 2,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between", // 👈 important
-  }}
->
-  {/* LEFT - LOGO */}
-  <Box component="img" src={aaseyaLogo} alt="aaseya" sx={{ height: 32 }} />
-
-  {/* RIGHT - LOGOUT */}
-  <Box
-    onClick={handleLogout}
-    sx={{
-      display: "flex",
-      alignItems: "center",
-      gap: 1,
-      cursor: "pointer",
-    }}
-  >
-    <Box
-      component="img"
-      src={logoutIcon}
-      sx={{ height: 18 }}
-    />
-    <Typography
-      fontSize={14}
-      color="#fff"
-      fontWeight={500}
-    >
-      Logout
-    </Typography>
-  </Box>
-</Box>
-
-      {/* ================= MAIN CONTENT ================= */}
+      {/* HEADER */}
       <Box
         sx={{
-          maxWidth: "1200px",   // reduced from 1306 (fix zoom feel)
-          mx: "auto",
-          px: "30px",
-          pt: "85px",
-          pb: "40px",
+          position: "fixed",
+          width: "100%",
+          zIndex: 1200,
+          backgroundColor: "#4C8B92",
+          px: 4,
+          py: 2,
+          display: "flex",
+          justifyContent: "space-between",
         }}
       >
+        <Box component="img" src={aaseyaLogo} sx={{ height: 32 }} />
+        <Box
+          onClick={handleLogout}
+          sx={{ cursor: "pointer", color: "#fff" }}
+        >
+          Logout
+        </Box>
+      </Box>
+
+      <Box sx={{ maxWidth: "1200px", mx: "auto", px: 4, py: 10 }}>
         {/* BACK */}
         <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            cursor: "pointer",
-            mb: 1,
-          }}
+          sx={{ display: "flex", alignItems: "center", cursor: "pointer", mb: 2 }}
           onClick={() => navigate(-1)}
         >
-          <ArrowBackIcon sx={{ fontSize: 18 }} />
-          <Typography sx={{ fontSize: 13, ml: 0.5 }}>
-            Back
-          </Typography>
+          <ArrowBackIcon fontSize="small" />
+          <Typography fontSize={14}>Back</Typography>
         </Box>
 
-        {/* TITLE */}
-        <Typography sx={{ fontSize: 22, fontWeight: 600, mb: 2.5 }}>
+        <Typography fontSize={22} fontWeight={600} mb={3}>
           Financial Cost & Policy Review - {claimId}
         </Typography>
 
-        {/* ================= FINANCIAL OVERVIEW ================= */}
-        <Paper
-          sx={{
-            p: 2.5,
-            borderRadius: "12px",
-            mb: 2.5,
-            border: "1px solid #E6DBD3",
-            boxShadow: "0px 2px 5px rgba(0,0,0,0.05)",
-          }}
-        >
-          <Typography sx={{ fontSize: 15, fontWeight: 600, mb: 1.5 }}>
+        {/* FINANCIAL OVERVIEW */}
+        <Paper sx={{ p: 3, mb: 3 }}>
+          <Typography fontWeight={600} mb={2}>
             Financial Overview
           </Typography>
 
-          <Stack direction="row" spacing={2.5}>
-            {[
-              { label: "Estimated Total Cost", value: "$12,450.00" },
-              { label: "Policy Sum Insured", value: "$50,000.00" },
-              { label: "Available Balance", value: "$37,550.00" },
-            ].map((item) => (
-              <Paper
-                key={item.label}
-                sx={{
-                  flex: 1,
-                  py: 1.5,
-                  px: 2,
-                  borderRadius: "10px",
-                  backgroundColor: "#F2F6F7",
-                  textAlign: "center",
-                  boxShadow: "none",
-                }}
-              >
-                <Typography sx={{ fontSize: 12, color: "#555" }}>
-                  {item.label}
-                </Typography>
-                <Typography sx={{ fontSize: 16, fontWeight: 700, mt: 0.5 }}>
-                  {item.value}
-                </Typography>
-              </Paper>
-            ))}
+          <Stack direction="row" spacing={4}>
+            <Box>
+              <Typography fontSize={12}>Estimated Total Cost</Typography>
+              <Typography fontWeight={700}>
+                {financeData.estimatedTotalCost}
+              </Typography>
+            </Box>
+
+            <Box>
+              <Typography fontSize={12}>Policy Sum Insured</Typography>
+              <Typography fontWeight={700}>
+                {financeData.policySumInsured}
+              </Typography>
+            </Box>
+
+            <Box>
+              <Typography fontSize={12}>Available Balance</Typography>
+              <Typography fontWeight={700}>
+                {financeData.availableBalance}
+              </Typography>
+            </Box>
           </Stack>
         </Paper>
 
-        {/* ================= CLAIM SUMMARY ================= */}
-        <Paper
-          sx={{
-            p: 2.5,
-            borderRadius: "12px",
-            mb: 2.5,
-            border: "1px solid #E6DBD3",
-            boxShadow: "0px 2px 5px rgba(0,0,0,0.05)",
-          }}
-        >
-          <Typography sx={{ fontSize: 15, fontWeight: 600, mb: 1.5 }}>
+        {/* CLAIM SUMMARY */}
+        <Paper sx={{ p: 3, mb: 3 }}>
+          <Typography fontWeight={600} mb={2}>
             Claim Summary
           </Typography>
 
-          <Stack direction="row" spacing={5}>
-            <Box>
-              <Typography sx={{ fontSize: 11, color: "#666" }}>
-                Full Name
-              </Typography>
-              <Typography sx={{ fontWeight: 600, fontSize: 14 }}>
-                Johnathan Doe
-              </Typography>
-            </Box>
-
-            <Box>
-              <Typography sx={{ fontSize: 11, color: "#666" }}>
-                Hospital/Provider
-              </Typography>
-              <Typography sx={{ fontWeight: 600, fontSize: 14 }}>
-                City General Hospital
-              </Typography>
-            </Box>
-
-            <Box>
-              <Typography sx={{ fontSize: 11, color: "#666" }}>
-                Treatment Type
-              </Typography>
-              <Typography sx={{ fontWeight: 600, fontSize: 14 }}>
-                Acute Appendectomy
-              </Typography>
-            </Box>
-
-            <Box>
-              <Typography sx={{ fontSize: 11, color: "#666" }}>
-                Admission Date
-              </Typography>
-              <Typography sx={{ fontWeight: 600, fontSize: 14 }}>
-                Oct 20, 2026
-              </Typography>
-            </Box>
-          </Stack>
-
-          <Stack direction="row" spacing={5} mt={2}>
-            <Box>
-              <Typography sx={{ fontSize: 11, color: "#666" }}>
-                Policy Number
-              </Typography>
-              <Typography sx={{ fontWeight: 600, fontSize: 14 }}>
-                IN-656947
-              </Typography>
-            </Box>
-
-            <Box>
-              <Typography sx={{ fontSize: 11, color: "#666" }}>
-                Reviewing Manager
-              </Typography>
-              <Typography sx={{ fontWeight: 600, fontSize: 14 }}>
-                Sarah Jenkins
-              </Typography>
-            </Box>
-          </Stack>
+          <Typography><strong>Full Name:</strong> {financeData.fullName}</Typography>
+          <Typography><strong>Hospital:</strong> {financeData.hospitalName}</Typography>
+          <Typography><strong>Treatment:</strong> {financeData.treatmentType}</Typography>
+          <Typography><strong>Admission Date:</strong> {financeData.admissionDate}</Typography>
+          <Typography><strong>Policy Number:</strong> {financeData.policyNumber}</Typography>
+          <Typography><strong>Reviewing Manager:</strong> {financeData.reviewingManager}</Typography>
         </Paper>
 
-        {/* ================= DECISION ================= */}
-        <Paper
-          sx={{
-            p: 2.5,
-            borderRadius: "12px",
-            border: "1px solid #E6DBD3",
-            boxShadow: "0px 2px 5px rgba(0,0,0,0.05)",
-          }}
-        >
-          <Typography sx={{ fontSize: 15, fontWeight: 600, mb: 1.5 }}>
+        {/* FINANCE DECISION */}
+        <Paper sx={{ p: 3 }}>
+          <Typography fontWeight={600} mb={2}>
             Finance Officer Decision
           </Typography>
 
@@ -240,59 +471,45 @@ export default function FinanceReview() {
             onChange={(e) => setDecision(e.target.value)}
           >
             <FormControlLabel
-              value="approve"
-              control={<Radio size="small" />}
-              label={<Typography sx={{ fontSize: 13 }}>Approve</Typography>}
+              value="APPROVE"
+              control={<Radio />}
+              label="Approve"
             />
             <FormControlLabel
-              value="reject"
-              control={<Radio size="small" />}
-              label={<Typography sx={{ fontSize: 13 }}>Reject</Typography>}
+              value="REJECT"
+              control={<Radio />}
+              label="Reject"
             />
           </RadioGroup>
-
-          <Typography sx={{ fontSize: 12, mt: 2, mb: 1 }}>
-            Comments
-          </Typography>
 
           <TextField
             fullWidth
             size="small"
+            placeholder="Comments"
             value={comments}
             onChange={(e) => setComments(e.target.value)}
+            sx={{ mt: 2 }}
           />
 
-          <Stack
-            direction="row"
-            justifyContent="flex-end"
-            spacing={2}
-            mt={2.5}
-          >
+          <Stack direction="row" justifyContent="flex-end" spacing={2} mt={3}>
             <Button
               variant="outlined"
-              sx={{
-                borderRadius: "18px",
-                px: 3,
-                fontSize: 13,
-                textTransform: "none",
-              }}
               onClick={() => navigate(-1)}
+              disabled={submitting}
             >
               Cancel
             </Button>
 
             <Button
               variant="contained"
+              onClick={handleSubmit}
+              disabled={submitting}
               sx={{
-                borderRadius: "18px",
-                px: 3,
-                fontSize: 13,
                 backgroundColor: "#4A8F97",
-                textTransform: "none",
                 "&:hover": { backgroundColor: "#3B7D84" },
               }}
             >
-              Submit
+              {submitting ? "Submitting..." : "Submit"}
             </Button>
           </Stack>
         </Paper>

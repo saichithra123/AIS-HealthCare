@@ -5,7 +5,7 @@
 // import UploadDocuments from "./components/UploadDocuments";
 // import Workpool from "./components/workpool";
 // import Chatbot from "./components/Chatbot";
-// import ClaimSummary from "./components/ClaimSummary"
+// import ClaimSummary from "./components/ClaimSummary";
 // import ClaimReview from "./components/ClaimReview";
 // import ClaimChecklist from "./components/ClaimChecklist";
 // import FinanceReview from "./components/FinanceReview";
@@ -15,25 +15,62 @@
 
 //   return (
 //     <Routes>
+//       {/* ================= PUBLIC ROUTES ================= */}
 //       <Route path="/" element={<WebPortal />} />
-//       <Route path="/login" element={<Login />} />
+//       <Route path="/ais/login" element={<Login />} />
+//       <Route path="/ais/chatbot" element={<Chatbot />} />
+
+//       {/* ================= PROTECTED ROUTES ================= */}
 //       <Route
-//         path="/registration"
+//         path="/ais/registration"
 //         element={
-//           isAuthenticated ? <Registration /> : <Navigate to="/login" />
+//           isAuthenticated ? <Registration /> : <Navigate to="/ais/login" />
 //         }
 //       />
-      
-// <Route path="/upload-documents" element={<UploadDocuments />} />
-//       <Route path="/workpool" element={<Workpool />} />
 
-// <Route path="/claim-summary/:claimId" element={<ClaimSummary />} />
-// <Route path="/claim-checklist/:claimId" element={<ClaimChecklist />} />
+//       <Route
+//         path="/ais/upload-documents"
+//         element={
+//           isAuthenticated ? <UploadDocuments /> : <Navigate to="/ais/login" />
+//         }
+//       />
 
-// <Route path="/claim-review/:claimId" element={<ClaimReview />} />
-// <Route path="/finance-review/:claimId" element={<FinanceReview />} />
+//       <Route
+//         path="/ais/workpool"
+//         element={
+//           isAuthenticated ? <Workpool /> : <Navigate to="/ais/login" />
+//         }
+//       />
 
+//       <Route
+//         path="/ais/claim-review/:claimId"
+//         element={
+//           isAuthenticated ? <ClaimReview /> : <Navigate to="/ais/login" />
+//         }
+//       />
 
+//       <Route
+//         path="/ais/claim-checklist/:claimId"
+//         element={
+//           isAuthenticated ? <ClaimChecklist /> : <Navigate to="/ais/login" />
+//         }
+//       />
+
+//       <Route
+//         path="/ais/claim-summary/:claimId"
+//         element={
+//           isAuthenticated ? <ClaimSummary /> : <Navigate to="/ais/login" />
+//         }
+//       />
+
+//       <Route
+//         path="/ais/finance-review/:claimId"
+//         element={
+//           isAuthenticated ? <FinanceReview /> : <Navigate to="/ais/login" />
+//         }
+//       />
+
+//       {/* ================= FALLBACK ================= */}
 //       <Route path="*" element={<Navigate to="/" />} />
 //     </Routes>
 //   );
@@ -50,35 +87,84 @@ import ClaimReview from "./components/ClaimReview";
 import ClaimChecklist from "./components/ClaimChecklist";
 import FinanceReview from "./components/FinanceReview";
 
-export default function App() {
-  const isAuthenticated = !!localStorage.getItem("access_token");
+function ProtectedRoute({ children }) {
+  const token = localStorage.getItem("access_token");
+  return token ? children : <Navigate to="/login" replace />;
+}
 
+export default function App() {
   return (
     <Routes>
-      {/* Public Routes */}
+      {/* PUBLIC ROUTES */}
       <Route path="/" element={<WebPortal />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/chatbot" element={<Chatbot />} />
 
-      {/* Protected Route */}
+      {/* PROTECTED ROUTES */}
       <Route
         path="/registration"
         element={
-          isAuthenticated ? <Registration /> : <Navigate to="/login" />
+          <ProtectedRoute>
+            <Registration />
+          </ProtectedRoute>
         }
       />
 
-      {/* ✅ Chatbot Route */}
-      <Route path="/chatbot" element={<Chatbot />} />
+      <Route
+        path="/upload-documents"
+        element={
+          <ProtectedRoute>
+            <UploadDocuments />
+          </ProtectedRoute>
+        }
+      />
 
-      {/* Other Routes */}
-      <Route path="/upload-documents" element={<UploadDocuments />} />
-      <Route path="/workpool" element={<Workpool />} />
-      <Route path="/claim-summary/:claimId" element={<ClaimSummary />} />
-      <Route path="/claim-checklist/:claimId" element={<ClaimChecklist />} />
-      <Route path="/claim-review/:claimId" element={<ClaimReview />} />
-      <Route path="/finance-review/:claimId" element={<FinanceReview />} />
+      <Route
+        path="/workpool"
+        element={
+          <ProtectedRoute>
+            <Workpool />
+          </ProtectedRoute>
+        }
+      />
 
-      {/* Fallback */}
+      <Route
+        path="/claim-review/:claimId"
+        element={
+          <ProtectedRoute>
+            <ClaimReview />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/claim-checklist/:claimId"
+        element={
+          <ProtectedRoute>
+            <ClaimChecklist />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/claim-summary/:claimId"
+        element={
+          <ProtectedRoute>
+            <ClaimSummary />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/finance-review/:claimId"
+        element={
+          <ProtectedRoute>
+            <FinanceReview />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* FALLBACK */}
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
