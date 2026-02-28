@@ -1,436 +1,261 @@
-// import { useState } from "react";
-// import {
-//   Box,
-//   Paper,
-//   Typography,
-//   Grid,
-//   Radio,
-//   RadioGroup,
-//   FormControlLabel,
-//   TextField,
-//   Button,
-//   Stack,
-// } from "@mui/material";
-// import { useParams, useNavigate } from "react-router-dom";
-// import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-
-// import aaseyaLogo from "../assets/Aaseyalogo.svg";
-
-// export default function ClaimSummary() {
-//   const navigate = useNavigate();
-//   const { claimId } = useParams();
-
-//   const [decision, setDecision] = useState("");
-//   const [comments, setComments] = useState("");
-
-//   const claimData = {
-//     fullName: "Johnathan Doe",
-//     relationship: "Primary Insured",
-//     contact: "(+1)(555)102-3456",
-//     email: "johndoe@aaseya.com",
-//     policyNumber: "IN-656947",
-//     policyType: "Family Floater",
-//     coverageType: "Cashless",
-//     baseSum: "$50,000",
-//     policyStatus: "Active",
-//     dateOfService: "Oct 20, 2026",
-//     providerName: "City General Hospital",
-//     claimType: "In-Patient Surgery",
-//     complaint:
-//       "Acute Appendectomy required after emergency admission. Post-Operative recovery was stable with no immediate complications noted.",
-//   };
-
-//   return (
-//     <Box sx={{ minHeight: "100vh", backgroundColor: "#fff" }}>
-
-//       {/* ===== HEADER ===== */}
-//       <Box
-//         sx={{
-//           backgroundColor: "#4A8F97",
-//           px: 4,
-//           py: 2,
-//         }}
-//       >
-//         <Box component="img" src={aaseyaLogo} sx={{ height: 32 }} />
-//       </Box>
-
-//       {/* ===== MAIN CONTENT ===== */}
-//       <Box sx={{ maxWidth: "1366px", mx: "auto", px: 4, py: 3 }}>
-
-//         {/* BACK */}
-//         <Box
-//           onClick={() => navigate(-1)}
-//           sx={{
-//             display: "flex",
-//             alignItems: "center",
-//             gap: 0.5,
-//             cursor: "pointer",
-//             mb: 1.5,
-//           }}
-//         >
-//           <ArrowBackIcon fontSize="small" />
-//           <Typography fontSize={14}>Back</Typography>
-//         </Box>
-
-//         {/* TITLE */}
-//         <Typography fontSize={28} fontWeight={700} mb={2.5}>
-//           Claim Review - {claimId}
-//         </Typography>
-
-//         {/* ===== CLAIM SUMMARY ===== */}
-//         <Paper
-//           sx={{
-//             p: 2.5,
-//             borderRadius: "12px",
-//             border: "1px solid #E6DBD3",
-//             mb: 2,
-//           }}
-//         >
-//           <Typography fontSize={18} fontWeight={700} mb={2}>
-//             Claim Summary
-//           </Typography>
-
-//           <Box
-//             sx={{
-//               backgroundColor: "#EDF3F4",
-//               borderRadius: "10px",
-//               p: 2,
-//             }}
-//           >
-//             <Typography fontSize={14} fontWeight={700} color="#3A8C95" mb={1}>
-//               Claimant Information
-//             </Typography>
-
-//             <Grid container spacing={2} mb={2}>
-//               <Grid item xs={3}><Typography fontSize={12}>Full Name</Typography><Typography fontWeight={600}>{claimData.fullName}</Typography></Grid>
-//               <Grid item xs={3}><Typography fontSize={12}>Relationship</Typography><Typography fontWeight={600}>{claimData.relationship}</Typography></Grid>
-//               <Grid item xs={3}><Typography fontSize={12}>Contact Number</Typography><Typography fontWeight={600}>{claimData.contact}</Typography></Grid>
-//               <Grid item xs={3}><Typography fontSize={12}>Email</Typography><Typography fontWeight={600}>{claimData.email}</Typography></Grid>
-//             </Grid>
-
-//             <Box sx={{ borderBottom: "1px solid #DDE7E8", mb: 2 }} />
-
-//             <Typography fontSize={14} fontWeight={700} color="#3A8C95" mb={1}>
-//               Policy Information
-//             </Typography>
-
-//             <Grid container spacing={2} mb={2}>
-//               <Grid item xs={3}><Typography fontSize={13}>Policy Number</Typography><Typography fontWeight={500}>{claimData.policyNumber}</Typography></Grid>
-//               <Grid item xs={3}><Typography fontSize={12}>Policy Type</Typography><Typography fontWeight={600}>{claimData.policyType}</Typography></Grid>
-//               <Grid item xs={3}><Typography fontSize={12}>Coverage Type</Typography><Typography fontWeight={600}>{claimData.coverageType}</Typography></Grid>
-//               <Grid item xs={3}><Typography fontSize={12}>Base Sum Insured</Typography><Typography fontWeight={600}>{claimData.baseSum}</Typography></Grid>
-//             </Grid>
-
-//             <Typography fontSize={12}>Policy Status</Typography>
-//             <Typography fontWeight={600} mb={2}>{claimData.policyStatus}</Typography>
-
-//             <Box sx={{ borderBottom: "1px solid #DDE7E8", mb: 2 }} />
-
-//             <Typography fontSize={14} fontWeight={700} color="#3A8C95" mb={1}>
-//               Incident Details
-//             </Typography>
-
-//             <Grid container spacing={2} mb={1}>
-//               <Grid item xs={4}><Typography fontSize={12}>Date of Service</Typography><Typography fontWeight={600}>{claimData.dateOfService}</Typography></Grid>
-//               <Grid item xs={4}><Typography fontSize={12}>Provider Name</Typography><Typography fontWeight={600}>{claimData.providerName}</Typography></Grid>
-//               <Grid item xs={4}><Typography fontSize={12}>Claim Type</Typography><Typography fontWeight={600}>{claimData.claimType}</Typography></Grid>
-//             </Grid>
-
-//             <Typography fontSize={12}>Chief Complaint/Diagnosis</Typography>
-//             <Typography fontWeight={600}>{claimData.complaint}</Typography>
-//           </Box>
-//         </Paper>
-
-//         {/* ===== MANAGER DECISION ===== */}
-//         <Paper
-//           sx={{
-//             p: 2.5,
-//             borderRadius: "12px",
-//             border: "1px solid #E6DBD3",
-//           }}
-//         >
-//           <Typography fontSize={18} fontWeight={700} mb={2}>
-//             Manager Decision
-//           </Typography>
-
-//           <RadioGroup
-//             row
-//             value={decision}
-//             onChange={(e) => setDecision(e.target.value)}
-//           >
-//             <FormControlLabel value="approve" control={<Radio />} label="Approve" />
-//             <FormControlLabel value="reject" control={<Radio />} label="Reject" />
-//           </RadioGroup>
-
-//           <Typography fontSize={13} mb={1}>Comments</Typography>
-
-//           <TextField
-//             fullWidth
-//             size="small"
-//             value={comments}
-//             onChange={(e) => setComments(e.target.value)}
-//           />
-
-//           <Stack direction="row" justifyContent="flex-end" spacing={2} mt={3}>
-//             <Button
-//               variant="outlined"
-//               onClick={() => navigate(-1)}
-//               sx={{ borderRadius: "20px", px: 4 }}
-//             >
-//               Cancel
-//             </Button>
-
-//             <Button
-//               variant="contained"
-//               sx={{
-//                 borderRadius: "20px",
-//                 px: 4,
-//                 backgroundColor: "#4A8F97",
-//                 "&:hover": { backgroundColor: "#3B7D84" },
-//               }}
-//             >
-//               Submit
-//             </Button>
-//           </Stack>
-//         </Paper>
-//       </Box>
-//     </Box>
-//   );
-// }
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
   Paper,
   Typography,
-  Grid,
   Radio,
   RadioGroup,
   FormControlLabel,
   TextField,
   Button,
   Stack,
+  Grid,
+  Snackbar,
+  Alert,
+  CircularProgress,
 } from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-
 import aaseyaLogo from "../assets/Aaseyalogo.svg";
-import logoutIcon from "../assets/logout.svg";
+import { Divider } from "@mui/material";
 
 export default function ClaimSummary() {
   const navigate = useNavigate();
   const { claimId } = useParams();
 
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+  const token = localStorage.getItem("access_token");
+
+  const [data, setData] = useState(null);
   const [decision, setDecision] = useState("");
   const [comments, setComments] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState(false);
+  const [snackOpen, setSnackOpen] = useState(false);
 
   const handleLogout = () => {
-  localStorage.removeItem("access_token");
-  localStorage.removeItem("refresh_token");
-  localStorage.removeItem("username");
-
-  navigate("/ais/login");
-};
-
-  /* ===== MOCK DATA ===== */
-  const claimData = {
-    fullName: "Johnathan Doe",
-    relationship: "Primary Insured",
-    contact: "(+1)(555)102-3456",
-    email: "johndoe@aaseya.com",
-    policyNumber: "IN-656947",
-    policyType: "Family Floater",
-    coverageType: "Cashless",
-    baseSum: "$50,000",
-    policyStatus: "Active",
-    dateOfService: "Oct 20, 2026",
-    providerName: "City General Hospital",
-    claimType: "In-Patient Surgery",
-    complaint:
-      "Acute Appendectomy required after emergency admission. Post-Operative recovery was stable with no immediate complications noted.",
+    localStorage.clear();
+    navigate("/login");
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        setError(false);
+
+        const res = await fetch(
+          `${baseUrl}/healthcare/claims/${claimId}/review`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        if (!res.ok) throw new Error("Fetch failed");
+
+        const result = await res.json();
+        setData(result);
+      } catch (err) {
+        console.error("Fetch error:", err);
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [claimId, token]);
+
+  const handleSubmit = async () => {
+    if (!decision) {
+      alert("Select Approve or Reject");
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+
+      const res = await fetch(
+        `${baseUrl}/healthcare/claims/${claimId}/manager-decision?decision=${decision}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ comments }),
+        }
+      );
+
+      if (!res.ok) throw new Error("Submission failed");
+
+      setSnackOpen(true);
+
+      setTimeout(() => {
+        navigate("/ais/workpool");
+      }, 1500);
+    } catch (err) {
+      console.error("Submit error:", err);
+      alert("Failed to submit decision");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const claimSummary = data?.claimSummary;
+  const policyInformation = data?.policyInformation;
+  const incidentDetails = data?.incidentDetails;
+
   return (
-    <Box sx={{ minHeight: "100vh", backgroundColor: "#fff" }}>
-
-      {/* ===== HEADER ===== */}
+    <Box sx={{ minHeight: "100vh", backgroundColor: "#F5F7F7" }}>
       <Box
-  sx={{
-    position: "fixed",
-    left: 0,
-    width: "100%",
-    zIndex: 1200,
-    backgroundColor: "#4C8B92",
-    px: 4,
-    py: 2,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between", // 👈 important
-  }}
->
-  {/* LEFT - LOGO */}
-  <Box component="img" src={aaseyaLogo} alt="aaseya" sx={{ height: 32 }} />
+        sx={{
+          position: "fixed",
+          width: "100%",
+          backgroundColor: "#4C8B92",
+          px: 5,
+          py: 2,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          zIndex: 1200,
+        }}
+      >
+        <Box component="img" src={aaseyaLogo} sx={{ height: 30 }} />
+        <Typography
+          sx={{ color: "#fff", cursor: "pointer", fontWeight: 500 }}
+          onClick={handleLogout}
+        >
+          Logout
+        </Typography>
+      </Box>
 
-  {/* RIGHT - LOGOUT */}
-  <Box
-    onClick={handleLogout}
-    sx={{
-      display: "flex",
-      alignItems: "center",
-      gap: 1,
-      cursor: "pointer",
-    }}
-  >
-    <Box
-      component="img"
-      src={logoutIcon}
-      sx={{ height: 18 }}
-    />
-    <Typography
-      fontSize={14}
-      color="#fff"
-      fontWeight={500}
-    >
-      Logout
-    </Typography>
-  </Box>
-</Box>
-
-      {/* ===== PAGE CONTENT ===== */}
-      <Box sx={{ maxWidth: "1366px", mx: "auto", px: 4, py: 3 }}>
-
+      <Box sx={{ maxWidth: "1200px", mx: "auto", px: 4, pt: "110px" }}>
         {/* BACK */}
-        <Box
+        <Stack
+          direction="row"
+          spacing={1}
+          mb={2}
+          sx={{ cursor: "pointer" }}
           onClick={() => navigate(-1)}
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: 0.5,
-            cursor: "pointer",
-            mb: 1,
-          }}
         >
           <ArrowBackIcon fontSize="small" />
           <Typography fontSize={14}>Back</Typography>
-        </Box>
+        </Stack>
 
-        {/* TITLE */}
-        <Typography fontSize={34} fontWeight={600} mb={2.5}>
+        <Typography
+          sx={{
+            fontSize: 28,
+            fontWeight: 700,
+            mb: 4,
+          }}
+        >
           Claim Review - {claimId}
         </Typography>
 
-        {/* ===== CLAIM SUMMARY ===== */}
         <Paper
-          sx={{
-            borderRadius: "12px",
-            border: "1px solid #E6DBD3",
-            p: 3,
-            mb: 2,
-          }}
-        >
-          <Typography fontSize={32} fontWeight={600} mb={2}>
-            Claim Summary
-          </Typography>
+  sx={{
+    p: 4,
+    borderRadius: 3,
+    boxShadow: "0px 2px 6px rgba(0,0,0,0.08)",
+    mb: 4,
+    minHeight: 250,
+  }}
+>
+  <Typography sx={{ fontSize: 18, fontWeight: 600, mb: 3 }}>
+    Claim Summary
+  </Typography>
 
-          <Box
-            sx={{
-              backgroundColor: "#EEF7F8",
-              borderRadius: "10px",
-              p: 3,
-            }}
-          >
-            {/* CLAIMANT INFO */}
-            <Typography fontSize={18} fontWeight={600} color="#2B8A92" mb={2}>
-              Claimant Information
-            </Typography>
+  {loading ? (
+    <Box sx={{ display: "flex", justifyContent: "center", py: 6 }}>
+      <CircularProgress />
+    </Box>
+  ) : error ? (
+    <Typography color="error">
+      Failed to load claim data
+    </Typography>
+  ) : (
+    <Box
+      sx={{
+        backgroundColor: "#EAF3F4",
+        borderRadius: 3,
+        p: 4,
+      }}
+    >
+      <Typography sx={{ fontWeight: 600, mb: 2 }}>
+        Claimant Information
+      </Typography>
 
-            <Grid container spacing={2.5} mb={2}>
-              <Grid item xs={3}>
-                <Typography fontSize={18} color="#2E2E2E">Full Name</Typography>
-                <Typography fontSize={18} fontWeight={500}>{claimData.fullName}</Typography>
-              </Grid>
-              <Grid item xs={3}>
-                <Typography fontSize={18}>Relationship</Typography>
-                <Typography fontSize={18} fontWeight={500}>{claimData.relationship}</Typography>
-              </Grid>
-              <Grid item xs={3}>
-                <Typography fontSize={18}>Contact Number</Typography>
-                <Typography fontSize={18} fontWeight={500}>{claimData.contact}</Typography>
-              </Grid>
-              <Grid item xs={3}>
-                <Typography fontSize={18}>Email</Typography>
-                <Typography fontSize={18} fontWeight={500}>{claimData.email}</Typography>
-              </Grid>
-            </Grid>
+      <Grid container spacing={4} mb={3}>
+        <Grid item xs={3}>
+          <Label title="Full Name" value={claimSummary?.fullName} />
+        </Grid>
+        <Grid item xs={3}>
+          <Label title="Relationship" value={claimSummary?.insuredType} />
+        </Grid>
+        <Grid item xs={3}>
+          <Label title="Contact Number" value={claimSummary?.contactNumber} />
+        </Grid>
+        <Grid item xs={3}>
+          <Label title="Email" value={claimSummary?.email} />
+        </Grid>
+      </Grid>
 
-            <Box sx={{ borderBottom: "1px solid #DDE7E8", my: 2 }} />
+      <Box sx={{ borderBottom: "1px solid #D5E2E3", mb: 3 }} />
 
-            {/* POLICY INFO */}
-            <Typography fontSize={18} fontWeight={600} color="#2B8A92" mb={2}>
-              Policy Information
-            </Typography>
+      <Typography sx={{ fontWeight: 600, mb: 2 }}>
+        Policy Information
+      </Typography>
 
-            <Grid container spacing={2.5} mb={2}>
-              <Grid item xs={3}>
-                <Typography fontSize={18}>Policy Number</Typography>
-                <Typography fontSize={18} fontWeight={500}>{claimData.policyNumber}</Typography>
-              </Grid>
-              <Grid item xs={3}>
-                <Typography fontSize={18}>Policy Type</Typography>
-                <Typography fontSize={18} fontWeight={500}>{claimData.policyType}</Typography>
-              </Grid>
-              <Grid item xs={3}>
-                <Typography fontSize={18}>Coverage Type</Typography>
-                <Typography fontSize={18} fontWeight={500}>{claimData.coverageType}</Typography>
-              </Grid>
-              <Grid item xs={3}>
-                <Typography fontSize={18}>Base Sum Insured</Typography>
-                <Typography fontSize={18} fontWeight={500}>{claimData.baseSum}</Typography>
-              </Grid>
-            </Grid>
+      <Grid container spacing={4} mb={3}>
+        <Grid item xs={3}>
+          <Label title="Policy Number" value={policyInformation?.policyNumber} />
+        </Grid>
+        <Grid item xs={3}>
+          <Label title="Policy Type" value={policyInformation?.policyType} />
+        </Grid>
+        <Grid item xs={3}>
+          <Label title="Coverage Type" value={policyInformation?.coverageType} />
+        </Grid>
+        <Grid item xs={3}>
+          <Label
+            title="Base Sum Insured"
+            value={
+              policyInformation?.baseSumInsured
+                ? `$${Number(policyInformation.baseSumInsured).toLocaleString()}`
+                : "-"
+            }
+          />
+        </Grid>
+      </Grid>
 
-            <Typography fontSize={18}>Policy Status</Typography>
-            <Typography fontSize={18} fontWeight={500} mb={2}>
-              {claimData.policyStatus}
-            </Typography>
+      <Box sx={{ borderBottom: "1px solid #D5E2E3", mb: 3 }} />
 
-            <Box sx={{ borderBottom: "1px solid #DDE7E8", my: 2 }} />
+      <Typography sx={{ fontWeight: 600, mb: 2 }}>
+        Incident Details
+      </Typography>
 
-            {/* INCIDENT DETAILS */}
-            <Typography fontSize={18} fontWeight={600} color="#2B8A92" mb={2}>
-              Incident Details
-            </Typography>
+      <Grid container spacing={4}>
+        <Grid item xs={3}>
+          <Label title="Date of Service" value={incidentDetails?.incidentDate} />
+        </Grid>
+        <Grid item xs={3}>
+          <Label title="Hospital Name" value={incidentDetails?.hospitalName} />
+        </Grid>
+        <Grid item xs={3}>
+          <Label title="Doctor Name" value={incidentDetails?.doctorName} />
+        </Grid>
+        <Grid item xs={3}>
+          <Label title="Medical Condition" value={incidentDetails?.medicalCondition} />
+        </Grid>
+      </Grid>
+    </Box>
+  )}
+</Paper>
 
-            <Grid container spacing={2.5} mb={1}>
-              <Grid item xs={4}>
-                <Typography fontSize={18}>Date of Service</Typography>
-                <Typography fontSize={18} fontWeight={500}>{claimData.dateOfService}</Typography>
-              </Grid>
-              <Grid item xs={4}>
-                <Typography fontSize={18}>Provider Name</Typography>
-                <Typography fontSize={18} fontWeight={500}>{claimData.providerName}</Typography>
-              </Grid>
-              <Grid item xs={4}>
-                <Typography fontSize={18}>Claim Type</Typography>
-                <Typography fontSize={18} fontWeight={500}>{claimData.claimType}</Typography>
-              </Grid>
-            </Grid>
-
-            <Typography fontSize={18}>Chief Complaint/Diagnosis</Typography>
-            <Typography fontSize={18} fontWeight={500}>
-              {claimData.complaint}
-            </Typography>
-          </Box>
-        </Paper>
-
-        {/* ===== MANAGER DECISION ===== */}
-        <Paper
-          sx={{
-            borderRadius: "12px",
-            border: "1px solid #E6DBD3",
-            p: 3,
-          }}
-        >
-          <Typography fontSize={18} fontWeight={600} mb={2}>
+        <Paper sx={{ p: 3,  borderRadius: 3 }}>
+          <Typography sx={{ fontSize: 16, fontWeight: 600, mb: 2 }}>
             Manager Decision
           </Typography>
 
@@ -439,44 +264,71 @@ export default function ClaimSummary() {
             value={decision}
             onChange={(e) => setDecision(e.target.value)}
           >
-            <FormControlLabel value="approve" control={<Radio />} label="Approve" />
-            <FormControlLabel value="reject" control={<Radio />} label="Reject" />
+            <FormControlLabel value="APPROVED" control={<Radio />} label="Approve" />
+            <FormControlLabel value="REJECTED" control={<Radio />} label="Reject" />
           </RadioGroup>
-
-          <Typography fontSize={14} mb={1}>
-            Comments
-          </Typography>
 
           <TextField
             fullWidth
-            size="small"
+            multiline
+            rows={3}
+            placeholder="Comments"
             value={comments}
             onChange={(e) => setComments(e.target.value)}
+            sx={{ mt: 2 }}
           />
 
           <Stack direction="row" justifyContent="flex-end" spacing={2} mt={3}>
             <Button
               variant="outlined"
+              disabled={submitting}
               onClick={() => navigate(-1)}
-              sx={{ borderRadius: "20px", px: 4 }}
+              sx={{
+                borderRadius: "50px",
+                px: 4,
+                textTransform: "none",
+              }}
             >
               Cancel
             </Button>
 
             <Button
               variant="contained"
+              disabled={submitting}
+              onClick={handleSubmit}
               sx={{
-                borderRadius: "20px",
+                borderRadius: "50px",
                 px: 4,
+                textTransform: "none",
                 backgroundColor: "#4A8F97",
+                color:"#fff",
                 "&:hover": { backgroundColor: "#3B7D84" },
               }}
             >
-              Submit
+              {submitting ? "Submitting..." : "Submit"}
             </Button>
           </Stack>
         </Paper>
       </Box>
+
+      <Snackbar open={snackOpen} autoHideDuration={1500}>
+        <Alert severity="success" variant="filled">
+          Decision submitted successfully
+        </Alert>
+      </Snackbar>
+    </Box>
+  );
+}
+
+function Label({ title, value }) {
+  return (
+    <Box>
+      <Typography sx={{ fontSize: 13, color: "#6B7280" }}>
+        {title}
+      </Typography>
+      <Typography sx={{ fontSize: 15, fontWeight: 600 }}>
+        {value || "-"}
+      </Typography>
     </Box>
   );
 }

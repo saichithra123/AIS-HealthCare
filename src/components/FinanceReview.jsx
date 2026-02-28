@@ -9,47 +9,106 @@ import {
   RadioGroup,
   FormControlLabel,
   TextField,
+  CircularProgress,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import aaseyaLogo from "../assets/Aaseyalogo.svg";
-import { useState } from "react";
-import logoutIcon from "../assets/logout.svg";
+import { useState, useEffect } from "react";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 export default function FinanceReview() {
   const navigate = useNavigate();
   const { claimId } = useParams();
+
   const [decision, setDecision] = useState("");
   const [comments, setComments] = useState("");
-  const handleLogout = () => {
-  localStorage.removeItem("access_token");
-  localStorage.removeItem("refresh_token");
-  localStorage.removeItem("username");
+  const [financeData, setFinanceData] = useState(null);
 
-  navigate("/ais/login");
-};
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+  const token = localStorage.getItem("access_token");
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/ais/login");
+  };
+
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `${baseUrl}/healthcare/finance/review/${claimId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        if (!response.ok) throw new Error();
+
+        const data = await response.json();
+        setFinanceData(data);
+      } catch (err) {
+        console.error("Finance fetch failed");
+        setFinanceData(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [claimId]);
+
+  
+  const handleSubmit = async () => {
+    if (!decision) {
+      alert("Please select Approve or Reject");
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+
+      const response = await fetch(
+        `${baseUrl}/healthcare/claims/${claimId}/finance-decision?decision=${decision}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) throw new Error();
+
+      navigate("/ais/workpool");
+    } catch (err) {
+      alert("Submission failed");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const financial = financeData?.financialOverview;
+  const claim = financeData?.claimSummary;
 
   return (
-    <Box sx={{ minHeight: "100vh", backgroundColor: "#fff" }}>
+    <Box sx={{ minHeight: "100vh", bgcolor: "#F6F9F8" }}>
       
-      {/* ================= FIXED HEADER ================= */}
       <Box
   sx={{
-    position: "fixed",
-    left: 0,
-    width: "100%",
-    zIndex: 1200,
-    backgroundColor: "#4C8B92",
+    bgcolor: "#4C8B92",
     px: 4,
     py: 2,
     display: "flex",
+    justifyContent: "space-between",
     alignItems: "center",
-    justifyContent: "space-between", // 👈 important
   }}
 >
-  {/* LEFT - LOGO */}
-  <Box component="img" src={aaseyaLogo} alt="aaseya" sx={{ height: 32 }} />
+  <Box component="img" src={aaseyaLogo} sx={{ height: 32 }} />
 
-  {/* RIGHT - LOGOUT */}
   <Box
     onClick={handleLogout}
     sx={{
@@ -57,180 +116,105 @@ export default function FinanceReview() {
       alignItems: "center",
       gap: 1,
       cursor: "pointer",
+      color: "#fff",
     }}
   >
-    <Box
-      component="img"
-      src={logoutIcon}
-      sx={{ height: 18 }}
-    />
-    <Typography
-      fontSize={14}
-      color="#fff"
-      fontWeight={500}
-    >
-      Logout
-    </Typography>
+    <LogoutIcon fontSize="small" />
+    <Typography fontSize={14}>Logout</Typography>
   </Box>
 </Box>
 
-      {/* ================= MAIN CONTENT ================= */}
-      <Box
-        sx={{
-          maxWidth: "1200px",   // reduced from 1306 (fix zoom feel)
-          mx: "auto",
-          px: "30px",
-          pt: "85px",
-          pb: "40px",
-        }}
-      >
+      <Box sx={{ maxWidth: "1100px", mx: "auto", px: 4, py: 6 }}>
         {/* BACK */}
         <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            cursor: "pointer",
-            mb: 1,
-          }}
+          sx={{ display: "flex", alignItems: "center", cursor: "pointer", mb: 2 }}
           onClick={() => navigate(-1)}
         >
-          <ArrowBackIcon sx={{ fontSize: 18 }} />
-          <Typography sx={{ fontSize: 13, ml: 0.5 }}>
-            Back
-          </Typography>
+          <ArrowBackIcon fontSize="small" />
+          <Typography fontSize={14}>Back</Typography>
         </Box>
 
-        {/* TITLE */}
-        <Typography sx={{ fontSize: 22, fontWeight: 600, mb: 2.5 }}>
+        <Typography fontSize={24} fontWeight={600} mb={4}>
           Financial Cost & Policy Review - {claimId}
         </Typography>
 
-        {/* ================= FINANCIAL OVERVIEW ================= */}
-        <Paper
-          sx={{
-            p: 2.5,
-            borderRadius: "12px",
-            mb: 2.5,
-            border: "1px solid #E6DBD3",
-            boxShadow: "0px 2px 5px rgba(0,0,0,0.05)",
-          }}
-        >
-          <Typography sx={{ fontSize: 15, fontWeight: 600, mb: 1.5 }}>
+       
+        <Paper sx={{ p: 3, mb: 4, borderRadius: 3 }}>
+          <Typography fontWeight={600} mb={3}>
             Financial Overview
           </Typography>
 
-          <Stack direction="row" spacing={2.5}>
-            {[
-              { label: "Estimated Total Cost", value: "$12,450.00" },
-              { label: "Policy Sum Insured", value: "$50,000.00" },
-              { label: "Available Balance", value: "$37,550.00" },
-            ].map((item) => (
-              <Paper
-                key={item.label}
-                sx={{
-                  flex: 1,
-                  py: 1.5,
-                  px: 2,
-                  borderRadius: "10px",
-                  backgroundColor: "#F2F6F7",
-                  textAlign: "center",
-                  boxShadow: "none",
-                }}
-              >
-                <Typography sx={{ fontSize: 12, color: "#555" }}>
-                  {item.label}
-                </Typography>
-                <Typography sx={{ fontSize: 16, fontWeight: 700, mt: 0.5 }}>
-                  {item.value}
-                </Typography>
-              </Paper>
-            ))}
-          </Stack>
+          {loading ? (
+            <Box sx={{ textAlign: "center", py: 3 }}>
+              <CircularProgress />
+            </Box>
+          ) : (
+            <Stack direction="row" spacing={3}>
+              {[
+                {
+                  label: "Estimated Total Cost",
+                  value: financial?.estimatedTotalCost,
+                },
+                {
+                  label: "Policy Sum Insured",
+                  value: financial?.policySumInsured,
+                },
+                {
+                  label: "Available Balance",
+                  value: financial?.availableBalance,
+                },
+              ].map((item, index) => (
+                <Box
+                  key={index}
+                  sx={{
+                    flex: 1,
+                    bgcolor: "#EEF3F4",
+                    p: 3,
+                    borderRadius: 3,
+                    textAlign: "center",
+                  }}
+                >
+                  <Typography fontSize={13} mb={1}>
+                    {item.label}
+                  </Typography>
+                  <Typography fontWeight={700} fontSize={18}>
+                    ₹ {item.value ?? "--"}
+                  </Typography>
+                </Box>
+              ))}
+            </Stack>
+          )}
         </Paper>
 
-        {/* ================= CLAIM SUMMARY ================= */}
-        <Paper
-          sx={{
-            p: 2.5,
-            borderRadius: "12px",
-            mb: 2.5,
-            border: "1px solid #E6DBD3",
-            boxShadow: "0px 2px 5px rgba(0,0,0,0.05)",
-          }}
-        >
-          <Typography sx={{ fontSize: 15, fontWeight: 600, mb: 1.5 }}>
+       
+        <Paper sx={{ p: 3, mb: 4, borderRadius: 3 }}>
+          <Typography fontWeight={600} mb={3}>
             Claim Summary
           </Typography>
 
-          <Stack direction="row" spacing={5}>
-            <Box>
-              <Typography sx={{ fontSize: 11, color: "#666" }}>
-                Full Name
-              </Typography>
-              <Typography sx={{ fontWeight: 600, fontSize: 14 }}>
-                Johnathan Doe
-              </Typography>
+          {loading ? (
+            <Box sx={{ textAlign: "center", py: 3 }}>
+              <CircularProgress />
             </Box>
+          ) : (
+            <Stack direction="row" spacing={6} flexWrap="wrap">
+              <Box minWidth="250px">
+                <Typography><strong>Full Name:</strong> {claim?.fullName ?? "--"}</Typography>
+                <Typography><strong>Policy Number:</strong> {claim?.policyNumber ?? "--"}</Typography>
+                <Typography><strong>Reviewing Manager:</strong> {claim?.reviewingManager ?? "--"}</Typography>
+              </Box>
 
-            <Box>
-              <Typography sx={{ fontSize: 11, color: "#666" }}>
-                Hospital/Provider
-              </Typography>
-              <Typography sx={{ fontWeight: 600, fontSize: 14 }}>
-                City General Hospital
-              </Typography>
-            </Box>
-
-            <Box>
-              <Typography sx={{ fontSize: 11, color: "#666" }}>
-                Treatment Type
-              </Typography>
-              <Typography sx={{ fontWeight: 600, fontSize: 14 }}>
-                Acute Appendectomy
-              </Typography>
-            </Box>
-
-            <Box>
-              <Typography sx={{ fontSize: 11, color: "#666" }}>
-                Admission Date
-              </Typography>
-              <Typography sx={{ fontWeight: 600, fontSize: 14 }}>
-                Oct 20, 2026
-              </Typography>
-            </Box>
-          </Stack>
-
-          <Stack direction="row" spacing={5} mt={2}>
-            <Box>
-              <Typography sx={{ fontSize: 11, color: "#666" }}>
-                Policy Number
-              </Typography>
-              <Typography sx={{ fontWeight: 600, fontSize: 14 }}>
-                IN-656947
-              </Typography>
-            </Box>
-
-            <Box>
-              <Typography sx={{ fontSize: 11, color: "#666" }}>
-                Reviewing Manager
-              </Typography>
-              <Typography sx={{ fontWeight: 600, fontSize: 14 }}>
-                Sarah Jenkins
-              </Typography>
-            </Box>
-          </Stack>
+              <Box minWidth="250px">
+                <Typography><strong>Hospital:</strong> {claim?.hospitalName ?? "--"}</Typography>
+                <Typography><strong>Treatment:</strong> {claim?.treatmentType ?? "--"}</Typography>
+                <Typography><strong>Admission Date:</strong> {claim?.admissionDate ?? "--"}</Typography>
+              </Box>
+            </Stack>
+          )}
         </Paper>
 
-        {/* ================= DECISION ================= */}
-        <Paper
-          sx={{
-            p: 2.5,
-            borderRadius: "12px",
-            border: "1px solid #E6DBD3",
-            boxShadow: "0px 2px 5px rgba(0,0,0,0.05)",
-          }}
-        >
-          <Typography sx={{ fontSize: 15, fontWeight: 600, mb: 1.5 }}>
+        <Paper sx={{ p: 3, borderRadius: 3 }}>
+          <Typography fontWeight={600} mb={2}>
             Finance Officer Decision
           </Typography>
 
@@ -239,60 +223,43 @@ export default function FinanceReview() {
             value={decision}
             onChange={(e) => setDecision(e.target.value)}
           >
-            <FormControlLabel
-              value="approve"
-              control={<Radio size="small" />}
-              label={<Typography sx={{ fontSize: 13 }}>Approve</Typography>}
-            />
-            <FormControlLabel
-              value="reject"
-              control={<Radio size="small" />}
-              label={<Typography sx={{ fontSize: 13 }}>Reject</Typography>}
-            />
+            <FormControlLabel value="Approved" control={<Radio />} label="Approve" />
+            <FormControlLabel value="Rejected" control={<Radio />} label="Reject" />
           </RadioGroup>
-
-          <Typography sx={{ fontSize: 12, mt: 2, mb: 1 }}>
-            Comments
-          </Typography>
 
           <TextField
             fullWidth
-            size="small"
+            placeholder="Comments"
             value={comments}
             onChange={(e) => setComments(e.target.value)}
+            sx={{ mt: 2 }}
           />
 
-          <Stack
-            direction="row"
-            justifyContent="flex-end"
-            spacing={2}
-            mt={2.5}
-          >
+          <Stack direction="row" justifyContent="flex-end" spacing={2} mt={3}>
             <Button
               variant="outlined"
-              sx={{
-                borderRadius: "18px",
-                px: 3,
-                fontSize: 13,
-                textTransform: "none",
-              }}
               onClick={() => navigate(-1)}
+              sx={{
+                borderRadius: "999px",
+                px: 4,
+              }}
             >
               Cancel
             </Button>
 
             <Button
               variant="contained"
+              disabled={submitting}
+              onClick={handleSubmit}
               sx={{
-                borderRadius: "18px",
-                px: 3,
-                fontSize: 13,
-                backgroundColor: "#4A8F97",
-                textTransform: "none",
-                "&:hover": { backgroundColor: "#3B7D84" },
+                borderRadius: "999px",
+                px: 4,
+                bgcolor: "#4C8B92",
+                color:"#fff",
+                "&:hover": { bgcolor: "#3B7D84" },
               }}
             >
-              Submit
+              {submitting ? "Submitting..." : "Submit"}
             </Button>
           </Stack>
         </Paper>

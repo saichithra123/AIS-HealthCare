@@ -1,9 +1,10 @@
 import { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import aaseyaLogo from "../assets/Aaseyalogo.svg";
 import cloudUploadIcon from "../assets/Icon awesome-cloud-upload-alt.svg";
-
+import { CircularProgress } from "@mui/material";
 import {
   Box,
   Button,
@@ -12,10 +13,11 @@ import {
   Typography,
 } from "@mui/material";
 import logoutIcon from "../assets/logout.svg";
+import { Snackbar, Alert } from "@mui/material";
 
 const uploadSections = [
   { id: "diagnostic", label: "Diagnostic Report" },
-  { id: "policy", label: "Policy Card" },
+  { id: "insurance", label: "Insurance Card" },
   { id: "medical", label: "Medical Form" },
 ];
 
@@ -24,9 +26,12 @@ export default function UploadDocuments() {
 
   const [files, setFiles] = useState({
     diagnostic: null,
-    policy: null,
+    insurance: null,
     medical: null,
   });
+const [submitting, setSubmitting] = useState(false);
+const [error, setError] = useState("");
+const [success, setSuccess] = useState(false);
 
   const handleFileSelect = (sectionId, file) => {
     setFiles((prev) => ({ ...prev, [sectionId]: file }));
@@ -65,47 +70,31 @@ export default function UploadDocuments() {
   const handleCancel = () => {
     setFiles({
       diagnostic: null,
-      policy: null,
+      insurance: null,
       medical: null,
     });
   };
 
 const handleSubmit = async () => {
   const token = localStorage.getItem("access_token");
+  const username = localStorage.getItem("username"); 
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
   try {
+    setSubmitting(true);
+    setError("");
+
     const formData = new FormData();
-
     formData.append("files", files.diagnostic);
-    formData.append("files", files.policy);
+    formData.append("files", files.insurance);
     formData.append("files", files.medical);
-
-    const payload = {
-      processInstanceKey: 6755399443491595,
-      detectedLanguages: ["en"],
-      documentsUploaded: 3,
-      isMultiLanguage: false,
-      primaryLanguage: "en",
-      status: "success",
-      documentLanguages: [
-        { language: "en", documentName: files.diagnostic.name },
-        { language: "en", documentName: files.medical.name },
-        { language: "en", documentName: files.policy.name },
-      ],
-    };
-
-    formData.append(
-      "payload",
-      new Blob([JSON.stringify(payload)], { type: "application/json" })
-    );
 
     const response = await fetch(
       `${baseUrl}/healthcare/startHealthCareProcess`,
       {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${token}`, 
+          Authorization: `Bearer ${token}`,
         },
         body: formData,
       }
@@ -114,15 +103,33 @@ const handleSubmit = async () => {
     if (!response.ok) throw new Error("Process start failed");
 
     const result = await response.json();
-    console.log("Process Started:", result);
+    console.log("PROCESS RESPONSE:", result);
 
-    navigate("/workpool");
+    const claimId = result.processInstanceKey;
+
+    const assignResponse = await fetch(
+      `${baseUrl}/healthcare/assignToClaimAssessor?claimId=${claimId}&claimAssessorId=${username}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!assignResponse.ok) {
+      throw new Error("Assignment failed");
+    }
+
+setSuccess(true);
+
   } catch (err) {
     console.error(err);
-    alert("Failed to start healthcare process");
+    setError("Failed to start healthcare process");
+  } finally {
+    setSubmitting(false);
   }
 };
-
 
 
 
@@ -139,13 +146,10 @@ const handleSubmit = async () => {
     py: 2,
     display: "flex",
     alignItems: "center",
-    justifyContent: "space-between", // 👈 important
-  }}
+    justifyContent: "space-between",   }}
 >
-  {/* LEFT - LOGO */}
   <Box component="img" src={aaseyaLogo} alt="aaseya" sx={{ height: 32 }} />
 
-  {/* RIGHT - LOGOUT */}
   <Box
     onClick={handleLogout}
     sx={{
@@ -204,7 +208,7 @@ const handleSubmit = async () => {
           sx={{
             border: "1px solid #E0E0E0",
             borderRadius: 2,
-            p: 3, // 🔽 reduced
+            p: 3, 
           }}
         >
           <Typography fontSize={18} fontWeight={600} mb={1}>
@@ -228,13 +232,13 @@ const handleSubmit = async () => {
                   spacing={2}
                   alignItems="center"
                   sx={{
-                    p: 2, // 🔽 reduced
+                    p: 2, 
                     borderRadius: "12px",
                     backgroundColor: "#fff",
                     boxShadow: "0px 1px 6px rgba(0,0,0,0.08)",
                   }}
                 >
-                  {/* DROP AREA */}
+                
                   <Box
                   onClick={() => handleBrowseClick(section.id)}
                     onDragOver={handleDragOver}
@@ -245,11 +249,11 @@ const handleSubmit = async () => {
                       alignItems: "center",
                       gap: 1.5,
                       px: 2,
-                      py: 1.5, // 🔽 reduced
+                      py: 1.5, 
                       backgroundColor: "#F2F2F2",
                       borderRadius: "8px",
                       cursor: "pointer",
-                          border: "1px dashed #BDBDBD", // ✅ UX hint
+                          border: "1px dashed #BDBDBD", 
     "&:hover": {
       backgroundColor: "#EAF4F5",
     },
@@ -259,7 +263,7 @@ const handleSubmit = async () => {
                     <Box
                       component="img"
                       src={cloudUploadIcon}
-                      sx={{ width: 20 }} // 🔽 reduced
+                      sx={{ width: 20 }} 
                     />
 <Typography
   fontSize={14}
@@ -280,7 +284,7 @@ const handleSubmit = async () => {
                     onClick={() => handleBrowseClick(section.id)}
                     sx={{
                       borderRadius: "20px",
-                      px: 3, // 🔽 reduced
+                      px: 3, 
                       py: 0.75,
                       textTransform: "none",
                       borderColor: "#9E9E9E",
@@ -294,7 +298,6 @@ const handleSubmit = async () => {
             ))}
           </Stack>
 
-          {/* ACTION BUTTONS */}
           <Stack direction="row" spacing={2} justifyContent="flex-end" mt={4}>
             <Button
               variant="outlined"
@@ -309,23 +312,52 @@ const handleSubmit = async () => {
               Cancel
             </Button>
 
-            <Button
-              variant="contained"
-              onClick={handleSubmit}
-              //  disabled={!allDocumentsUploaded}
-              sx={{
-                borderRadius: 8,
-                px: 3,
-                textTransform: "none",
-                backgroundColor: "#4C8B92",
-                color: "#fff",
-              }}
-            >
-              Submit
-            </Button>
+     <Button
+  variant="contained"
+  onClick={handleSubmit}
+  disabled={!allDocumentsUploaded || submitting}
+  sx={{
+    borderRadius: 8,
+    px: 3,
+    textTransform: "none",
+    backgroundColor: "#4C8B92",
+    color: "#fff",
+  }}
+>
+  Submit
+</Button>
           </Stack>
         </Paper>
-      </Box>
+              </Box>
+
+      {submitting && (
+        <Box
+          sx={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            backgroundColor: "rgba(0,0,0,0.4)",
+            zIndex: 2000,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <CircularProgress size={60} sx={{ color: "#fff" }} />
+        </Box>
+      )}
+<Snackbar
+  open={success}
+  autoHideDuration={3000}
+  onClose={() => setSuccess(false)}
+  anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+>
+  <Alert severity="success" sx={{ width: "100%" }}>
+    Submitted successfully. Case routed to Claim Assessor.
+  </Alert>
+</Snackbar>
     </Box>
   );
 }

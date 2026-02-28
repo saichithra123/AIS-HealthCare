@@ -28,8 +28,25 @@ const Login = () => {
   const navigate = useNavigate();
 
   const CLIENT_ID = import.meta.env.VITE_KEYCLOAK_CLIENT_ID;
+  const BASE_URL = import.meta.env.VITE_KEYCLOAK_BASE_URL;
+  const REALM = import.meta.env.VITE_KEYCLOAK_REALM;
 
-  // ---------------- LOGIN ----------------
+
+
+  // 🔥 Decode JWT Token
+  const decodeToken = (token) => {
+    const base64Url = token.split(".")[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split("")
+        .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+        .join("")
+    );
+    return JSON.parse(jsonPayload);
+  };
+
+  // 🔥 LOGIN
   const handleLogin = async () => {
     if (!email || !password) {
       alert("Please enter username and password");
@@ -44,7 +61,9 @@ const Login = () => {
     params.append("username", email.trim());
     params.append("password", password);
 
-    const TOKEN_URL = `${import.meta.env.VITE_KEYCLOAK_BASE_URL}/realms/${import.meta.env.VITE_KEYCLOAK_REALM}/protocol/openid-connect/token`;
+    const TOKEN_URL = `${BASE_URL}/realms/${REALM}/protocol/openid-connect/token`;
+
+    console.log(`TOKEN_URL: ${TOKEN_URL}`)
 
     try {
       const response = await fetch(TOKEN_URL, {
@@ -57,30 +76,87 @@ const Login = () => {
 
       const data = await response.json();
 
+      console.log("Data is:", data)
+
       if (!response.ok) {
         throw new Error(data.error_description || "Login failed");
       }
 
+      // ✅ Store tokens
       localStorage.setItem("access_token", data.access_token);
       localStorage.setItem("refresh_token", data.refresh_token);
       localStorage.setItem("username", email);
 
-      navigate("/registration");
+      // 🔥 Decode token
+const decoded = decodeToken(data.access_token);
+
+const clientRoles =
+  decoded.resource_access?.[CLIENT_ID]?.roles || [];
+
+console.log("Client Roles:", clientRoles);
+
+let userRole = "CUSTOMER";
+
+// FORCE pure claimant role first
+if (
+  clientRoles.some(role =>
+    role.toLowerCase().includes("cutomer") &&
+    !role.toLowerCase().includes("approver") &&
+    !role.toLowerCase().includes("manager") &&
+    !role.toLowerCase().includes("finance")
+  )
+) {
+  console.log("Entered CUSTSS")
+  userRole = "CUSTOMER";
+}
+else if (
+  clientRoles.some(role =>
+    role.toLowerCase().includes("finance")
+  )
+) {
+  userRole = "FINANCE";
+}
+else if (
+  clientRoles.some(role =>
+    role.toLowerCase().includes("approver") ||
+    role.toLowerCase().includes("manager")
+  )
+) {
+  userRole = "MANAGER";
+}
+else if (
+  clientRoles.some(role =>
+    role.toLowerCase().includes("assessor")
+  ) 
+) {
+  console.log("Entered assessor")
+  userRole = "ASSESSOR";
+}
+
+localStorage.setItem("userRole", userRole);
+
+console.log("Resolved App Role:", userRole);
+      console.log("Entering navigation")
+      if (userRole === "CUSTOMER") {
+        navigate("/registration");
+      }
+      else if (userRole === "ASSESSOR") {
+        navigate("/workpool");
+      }
+      else if (userRole === "MANAGER") {
+        navigate("/workpool");
+      }
+      else if (userRole === "FINANCE") {
+        navigate("/workpool");
+      }
+      console.log("after navigate")
+
     } catch (err) {
       console.error("Login error:", err);
       alert("Login failed. Please check credentials");
     } finally {
       setLoading(false);
     }
-  };
-
-  // ---------------- LOGOUT ----------------
-  const handleLogout = () => {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
-    localStorage.removeItem("username");
-
-    navigate("/ais/login");
   };
 
   return (
@@ -92,7 +168,6 @@ const Login = () => {
         bgcolor: "#F6F9F8",
       }}
     >
-      {/* LEFT IMAGE */}
       <Box
         sx={{
           width: { xs: "100%", md: "45%" },
@@ -123,7 +198,6 @@ const Login = () => {
         </Box>
       </Box>
 
-      {/* RIGHT LOGIN */}
       <Box
         sx={{
           width: { xs: "100%", md: "55%" },
@@ -213,22 +287,10 @@ const Login = () => {
             {loading ? "Logging in..." : "LOGIN"}
           </Button>
 
-          {/* FORGOT PASSWORD */}
           <Box textAlign="center">
             <Link sx={{ fontSize: 13, color: "#5A9BA5" }}>
               Forgot Password?
             </Link>
-          </Box>
-
-          {/* LOGOUT BUTTON BELOW FORGOT PASSWORD */}
-          <Box textAlign="center" mt={1}>
-            <Button
-              size="small"
-              onClick={handleLogout}
-              sx={{ color: "#5A9BA5", textTransform: "none" }}
-            >
-              Logout
-            </Button>
           </Box>
         </Box>
       </Box>
@@ -237,3 +299,4 @@ const Login = () => {
 };
 
 export default Login;
+
