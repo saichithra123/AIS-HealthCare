@@ -1,80 +1,3 @@
-// import { Routes, Route, Navigate } from "react-router-dom";
-// import WebPortal from "./components/WebPortal";
-// import Login from "./components/Login";
-// import Registration from "./components/Registration";
-// import UploadDocuments from "./components/UploadDocuments";
-// import Workpool from "./components/workpool";
-// import Chatbot from "./components/Chatbot";
-// import ClaimSummary from "./components/ClaimSummary";
-// import ClaimReview from "./components/ClaimReview";
-// import ClaimChecklist from "./components/ClaimChecklist";
-// import FinanceReview from "./components/FinanceReview";
-
-// export default function App() {
-//   const isAuthenticated = !!localStorage.getItem("access_token");
-
-//   return (
-//     <Routes>
-//       {/* ================= PUBLIC ROUTES ================= */}
-//       <Route path="/" element={<WebPortal />} />
-//       <Route path="/ais/login" element={<Login />} />
-//       <Route path="/ais/chatbot" element={<Chatbot />} />
-
-//       {/* ================= PROTECTED ROUTES ================= */}
-//       <Route
-//         path="/ais/registration"
-//         element={
-//           isAuthenticated ? <Registration /> : <Navigate to="/ais/login" />
-//         }
-//       />
-
-//       <Route
-//         path="/ais/upload-documents"
-//         element={
-//           isAuthenticated ? <UploadDocuments /> : <Navigate to="/ais/login" />
-//         }
-//       />
-
-//       <Route
-//         path="/ais/workpool"
-//         element={
-//           isAuthenticated ? <Workpool /> : <Navigate to="/ais/login" />
-//         }
-//       />
-
-//       <Route
-//         path="/ais/claim-review/:claimId"
-//         element={
-//           isAuthenticated ? <ClaimReview /> : <Navigate to="/ais/login" />
-//         }
-//       />
-
-//       <Route
-//         path="/ais/claim-checklist/:claimId"
-//         element={
-//           isAuthenticated ? <ClaimChecklist /> : <Navigate to="/ais/login" />
-//         }
-//       />
-
-//       <Route
-//         path="/ais/claim-summary/:claimId"
-//         element={
-//           isAuthenticated ? <ClaimSummary /> : <Navigate to="/ais/login" />
-//         }
-//       />
-
-//       <Route
-//         path="/ais/finance-review/:claimId"
-//         element={
-//           isAuthenticated ? <FinanceReview /> : <Navigate to="/ais/login" />
-//         }
-//       />
-
-//       {/* ================= FALLBACK ================= */}
-//       <Route path="*" element={<Navigate to="/" />} />
-//     </Routes>
-//   );
-// }
 import { Routes, Route, Navigate } from "react-router-dom";
 import WebPortal from "./components/WebPortal";
 import Login from "./components/Login";
@@ -87,85 +10,139 @@ import ClaimReview from "./components/ClaimReview";
 import ClaimChecklist from "./components/ClaimChecklist";
 import FinanceReview from "./components/FinanceReview";
 
-function ProtectedRoute({ children }) {
+
+function RoleProtectedRoute({ children, allowedRoles }) {
   const token = localStorage.getItem("access_token");
-  return token ? children : <Navigate to="/login" replace />;
+  const role = localStorage.getItem("userRole");
+
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (!allowedRoles.includes(role)) {
+    if (role === "CUSTOMER") {
+      return <Navigate to="/registration" replace />;
+    }
+    return <Navigate to="/workpool" replace />;
+  }
+
+  return children;
 }
 
+
 export default function App() {
+  const token = localStorage.getItem("access_token");
+  const role = localStorage.getItem("userRole");
+
   return (
     <Routes>
-      {/* PUBLIC ROUTES */}
-      <Route path="/" element={<WebPortal />} />
-      <Route path="/login" element={<Login />} />
+
+
+      <Route
+        path="/"
+        element={
+          token
+            ? role === "CUSTOMER"
+              ? <Navigate to="/registration" />
+              : <Navigate to="/workpool" />
+            : <WebPortal />
+        }
+      />
+
+      <Route
+        path="/login"
+        element={
+          token
+            ? role === "CUSTOMER"
+              ? <Navigate to="/registration" />
+              : <Navigate to="/workpool" />
+            : <Login />
+        }
+      />
+
       <Route path="/chatbot" element={<Chatbot />} />
 
-      {/* PROTECTED ROUTES */}
+
       <Route
         path="/registration"
         element={
-          <ProtectedRoute>
+          <RoleProtectedRoute allowedRoles={["CUSTOMER"]}>
             <Registration />
-          </ProtectedRoute>
+          </RoleProtectedRoute>
         }
       />
 
       <Route
         path="/upload-documents"
         element={
-          <ProtectedRoute>
+          <RoleProtectedRoute allowedRoles={["CUSTOMER"]}>
             <UploadDocuments />
-          </ProtectedRoute>
+          </RoleProtectedRoute>
         }
       />
+
 
       <Route
         path="/workpool"
         element={
-          <ProtectedRoute>
+          <RoleProtectedRoute allowedRoles={["ASSESSOR", "MANAGER", "FINANCE"]}>
             <Workpool />
-          </ProtectedRoute>
+          </RoleProtectedRoute>
         }
       />
+
 
       <Route
         path="/claim-review/:claimId"
         element={
-          <ProtectedRoute>
+          <RoleProtectedRoute allowedRoles={["ASSESSOR"]}>
             <ClaimReview />
-          </ProtectedRoute>
+          </RoleProtectedRoute>
         }
       />
 
       <Route
         path="/claim-checklist/:claimId"
         element={
-          <ProtectedRoute>
+          <RoleProtectedRoute allowedRoles={["ASSESSOR"]}>
             <ClaimChecklist />
-          </ProtectedRoute>
+          </RoleProtectedRoute>
         }
       />
+
 
       <Route
         path="/claim-summary/:claimId"
         element={
-          <ProtectedRoute>
+          <RoleProtectedRoute allowedRoles={["MANAGER"]}>
             <ClaimSummary />
-          </ProtectedRoute>
+          </RoleProtectedRoute>
         }
       />
+
 
       <Route
         path="/finance-review/:claimId"
         element={
-          <ProtectedRoute>
+          <RoleProtectedRoute allowedRoles={["FINANCE"]}>
             <FinanceReview />
-          </ProtectedRoute>
+          </RoleProtectedRoute>
         }
       />
 
-      {/* FALLBACK */}
-      <Route path="*" element={<Navigate to="/" />} />
+    
+
+      <Route
+        path="*"
+        element={
+          token
+            ? role === "CUSTOMER"
+              ? <Navigate to="/registration" />
+              : <Navigate to="/workpool" />
+            : <Navigate to="/" />
+        }
+      />
+
     </Routes>
   );
 }
