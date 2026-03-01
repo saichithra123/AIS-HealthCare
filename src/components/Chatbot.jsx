@@ -868,6 +868,7 @@ export default function Chatbot({ onClose, conversationId: externalConversationI
             </Typography>
           </Box>
         )}
+        
 
         {/* INPUT */}
         {stage !== "WELCOME" && !showUpload && !showConfirm && !chatCompleted && (
