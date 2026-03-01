@@ -238,6 +238,7 @@ export default function ClaimReview() {
       <Paper sx={{ p: 3, borderRadius: 3 }}>
         <Typography fontSize={15} fontWeight={600} mb={2}>
           Uploaded Documents
+          
         </Typography>
 
         <Stack spacing={2}>
