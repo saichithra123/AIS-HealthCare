@@ -1,896 +1,3 @@
- 
-// import { useState, useEffect, useRef } from "react";
-// import {
-//   Box,
-//   Paper,
-//   Typography,
-//   TextField,
-//   Stack,
-//   Button,
-//   IconButton,
-//   Radio,
-//   RadioGroup,
-//   FormControlLabel,
-//   FormControl,
-// } from "@mui/material";
-// import CloseIcon from "@mui/icons-material/Close";
-// import SendIcon from "@mui/icons-material/Send";
-// import chatbotIcon from "../assets/noun-chatbot-6794264.svg";
- 
-// function UploadDocumentsCard({
-//   medicalFile,
-//   diagnosticFile,
-//   setMedicalFile,
-//   setDiagnosticFile,
-//   showError,
-// }) {
-//   return (
-//     <Paper sx={{ p: 2, borderRadius: 2 }}>
-//       {showError && (!medicalFile || !diagnosticFile) && (
-//         <Paper
-//           sx={{
-//             p: 1.5,
-//             mb: 1.5,
-//             backgroundColor: "#FDECEA",
-//             border: "1px solid #F5C2C7",
-//           }}
-//         >
-//           <Typography fontSize={12} color="#D32F2F">
-//             We noticed form is missing. Please upload to continue.
-//           </Typography>
-//         </Paper>
-//       )}
- 
-//       {/* MEDICAL FORM */}
-//       <Paper variant="outlined" sx={{ p: 1.5, mb: 1.5, display: "flex", justifyContent: "space-between" }}>
-//         <Box>
-//           <Typography fontSize={14} fontWeight={600}>Medical Form</Typography>
-//           <Typography fontSize={12} color={medicalFile ? "#2E7D32" : "text.secondary"}>
-//             {medicalFile ? "UPLOADED" : "PENDING"}
-//           </Typography>
-//         </Box>
-//         <Button component="label" variant="outlined" size="small">
-//           {medicalFile ? "Change" : "Choose File"}
-//           <input
-//             hidden
-//             type="file"
-//             onChange={(e) => setMedicalFile(e.target.files[0])}
-//           />
-//         </Button>
-//       </Paper>
- 
-//       {/* DIAGNOSTIC REPORT */}
-//       <Paper variant="outlined" sx={{ p: 1.5, display: "flex", justifyContent: "space-between" }}>
-//         <Box>
-//           <Typography fontSize={14} fontWeight={600}>Diagnostic Report</Typography>
-//           <Typography fontSize={12} color={diagnosticFile ? "#2E7D32" : "text.secondary"}>
-//             {diagnosticFile ? "UPLOADED" : "PENDING"}
-//           </Typography>
-//         </Box>
-//         <Button component="label" variant="outlined" size="small">
-//           {diagnosticFile ? "Change" : "Choose File"}
-//           <input
-//             hidden
-//             type="file"
-//             onChange={(e) => setDiagnosticFile(e.target.files[0])}
-//           />
-//         </Button>
-//       </Paper>
-//     </Paper>
-//   );
-// }
- 
-// function HospitalForm({ onSubmit }) {
-//   const [treatmentType, setTreatmentType] = useState("Planned");
-//   const [treatmentNature, setTreatmentNature] = useState("Surgical");
-//   const [hospitalName, setHospitalName] = useState("");
-//   const [estimatedCost, setEstimatedCost] = useState("");
- 
-//   return (
-//     <Paper sx={{ p: 2.5, borderRadius: 2 }}>
-//       <Typography fontWeight={600} mb={2}>
-//         Hospital & Treatment Details
-//       </Typography>
- 
-//       <Typography fontSize={13}>Treatment Type</Typography>
-//       <RadioGroup
-//         row
-//         value={treatmentType}
-//         onChange={(e) => setTreatmentType(e.target.value)}
-//       >
-//         <FormControlLabel value="Planned" control={<Radio />} label="Planned" />
-//         <FormControlLabel value="Emergency" control={<Radio />} label="Emergency" />
-//       </RadioGroup>
- 
-//       <Typography fontSize={13} mt={2}>Treatment Nature</Typography>
-//       <RadioGroup
-//         row
-//         value={treatmentNature}
-//         onChange={(e) => setTreatmentNature(e.target.value)}
-//       >
-//         <FormControlLabel value="Surgical" control={<Radio />} label="Surgical" />
-//         <FormControlLabel value="Non-Surgical" control={<Radio />} label="Non-Surgical" />
-//       </RadioGroup>
- 
-//       <Typography fontSize={14} mt={2} mb={0.5}>
-//         Hospital Name
-//       </Typography>
-//       <TextField
-//         fullWidth
-//         size="small"
-//         value={hospitalName}
-//         onChange={(e) => setHospitalName(e.target.value)}
-//       />
-//       <Typography fontSize={14} mt={2} mb={0.5}>
-//         Estimated Cost
-//       </Typography>
-//       <TextField
-//         fullWidth
-//         size="small"
-//         value={estimatedCost}
-//         onChange={(e) => setEstimatedCost(e.target.value)}
-//       />
-//     </Paper>
-//   );
-// }
- 
-// function DetailRow({ label, value, highlight }) {
-//   return (
-//     <Box
-//       sx={{
-//         display: "flex",
-//         justifyContent: "space-between",
-//         alignItems: "center",
-//       }}
-//     >
-//       <Typography
-//         sx={{ fontSize: 13, color: "#6B7280" }}
-//       >
-//         {label}
-//       </Typography>
-//       {highlight ? (
-//         <Box
-//           sx={{
-//             px: 1.2,
-//             py: 0.3,
-//             borderRadius: 1.5,
-//             backgroundColor: "#E6F4EA",
-//             color: "#2E7D32",
-//             fontSize: 12,
-//             fontWeight: 600,
-//           }}
-//         >
-//           {value}
-//         </Box>
-//       ) : (
-//         <Typography
-//           sx={{ fontSize: 13, fontWeight: 600 }}
-//         >
-//           {value}
-//         </Typography>
-//       )}
-//     </Box>
-//   );
-// }
- 
-// function ChatBubble({
-//   msg,
-//   medicalFile,
-//   diagnosticFile,
-//   setMedicalFile,
-//   setDiagnosticFile,
-//   showUploadError,
-// }) {
-//   const policyDetails = msg.policyDetails;
-// if (msg.typeCard === "PRE_APPROVAL_STATUS" && msg.preApproval) {
-//   const p = msg.preApproval;
- 
-//   return (
-//     <Paper sx={{ p: 2.5 }}>
-//       <Typography fontWeight={600} mb={1} color="#4F8787">
-//         Pre-Approval Status
-//       </Typography>
- 
-//       {/* BASIC DETAILS */}
-//       <Stack spacing={1}>
-//         <DetailRow label="Case ID" value={p.caseId} />
-//         <DetailRow label="Hospital Name" value={p.hospitalName} />
-//         <DetailRow label="Treatment Type" value={p.treatmentType} />
-//         <DetailRow label="Submission Date" value={p.submissionDate} />
-//         <DetailRow label="Status" value={p.status} highlight />
-//       </Stack>
- 
-//       {/* ================= APPROVED ================= */}
-//       {p.status === "Approved" && (
-//         <Paper
-//           variant="outlined"
-//           sx={{
-//             p: 1.5,
-//             mt: 2,
-//             backgroundColor: "#E6F4EA",
-//             borderColor: "#2E7D32",
-//           }}
-//         >
-//           <Typography fontWeight={600} color="#2E7D32" mb={1}>
-//             Approval Details
-//           </Typography>
- 
-//           <Stack spacing={1}>
-//             <DetailRow label="Approved Amount" value={p.approvedAmount} />
-//             <DetailRow label="Validity Period" value={p.validityPeriod} />
-//             <DetailRow label="Hospital Name" value={p.hospitalName} />
-//           </Stack>
-//         </Paper>
-//       )}
- 
-//       {/* ================= REJECTED ================= */}
-//       {p.status === "Rejected" && (
-//         <Paper
-//           variant="outlined"
-//           sx={{
-//             p: 1.5,
-//             mt: 2,
-//             backgroundColor: "#FDECEA",
-//             borderColor: "#D32F2F",
-//           }}
-//         >
-//           <Typography fontWeight={600} color="#D32F2F" mb={1}>
-//             Rejection Reason
-//           </Typography>
- 
-//           <Typography fontSize={13}>
-//             {p.rejectionReason}
-//           </Typography>
-//         </Paper>
-//       )}
-//     </Paper>
-//   );
-// }
-//   if (msg.accessRestricted) {
-//     return (
-//       <Box sx={{ alignSelf: "flex-start", maxWidth: "90%" }}>
-//         <Paper
-//           sx={{
-//             p: 2.5,
-//             backgroundColor: "#FDECEA",
-//             borderRadius: 2,
-//             border: "1px solid #F5C2C7",
-//           }}
-//         >
-//           <Typography
-//             fontWeight={700}
-//             sx={{ color: "#D32F2F", mb: 1 }}
-//           >
-//             Access Restricted
-//           </Typography>
-//           <Typography fontSize={13} sx={{ mb: 2 }}>
-//             Verification has failed multiple times.
-//             Please contact customer support or try again later.
-//           </Typography>
-//           <Button
-//             fullWidth
-//             variant="contained"
-//             sx={{
-//               backgroundColor: "#D32F2F",
-//               textTransform: "none",
-//             }}
-//           >
-//             Call Support
-//           </Button>
-//         </Paper>
-//       </Box>
-//     );
-//   }
- 
-//   // IDENTITY_VERIFIED
-//   if (msg.typeCard === "IDENTITY_VERIFIED" && policyDetails) {
-//     return (
-//       <Box sx={{ alignSelf: "flex-start", maxWidth: "100%" }}>
-//         <Box
-//           sx={{
-//             backgroundColor: "#EAF4F4",
-//             p: 2,
-//             borderRadius: 2,
-//           }}
-//         >
-//           <Typography
-//             sx={{
-//               fontSize: 14,
-//               fontWeight: 600,
-//               color: "#4F8787",
-//               mb: 1.5,
-//             }}
-//           >
-//             Identity Verified Successfully
-//           </Typography>
-//           <Paper
-//             elevation={0}
-//             sx={{
-//               p: 2,
-//               borderRadius: 2,
-//               border: "1px solid #E5E7EB",
-//               backgroundColor: "#FFFFFF",
-//             }}
-//           >
-//             <Typography
-//               sx={{
-//                 fontSize: 13,
-//                 fontWeight: 500,
-//                 color: "#4F8787",
-//                 mb: 1.5,
-//               }}
-//             >
-//               Policy Details
-//             </Typography>
-//             <Stack spacing={1}>
-//               <DetailRow
-//                 label="Policy Number"
-//                 value={policyDetails.policyNumber}
-//               />
-//               <DetailRow label="SSN" value={policyDetails.ssn} />
-//               <DetailRow
-//                 label="Policy Status"
-//                 value={policyDetails.status}
-//                 highlight
-//               />
-//               <DetailRow
-//                 label="Policy Type"
-//                 value={policyDetails.type}
-//               />
-//             </Stack>
-//             <Box
-//               sx={{
-//                 height: 1,
-//                 backgroundColor: "#E5E7EB",
-//                 my: 1.5,
-//               }}
-//             />
-//             <Typography
-//               sx={{
-//                 fontSize: 13,
-//                 fontWeight: 600,
-//                 color: "#4F8787",
-//                 mb: 0.5,
-//               }}
-//             >
-//               Covered Members
-//             </Typography>
-//             <Stack spacing={0.4}>
-//               {policyDetails.members.map((m, i) => (
-//                 <Typography key={i} sx={{ fontSize: 13 }}>
-//                   {m}
-//                 </Typography>
-//               ))}
-//             </Stack>
-//           </Paper>
-//         </Box>
-//       </Box>
-//     );
-//   }
- 
-//   if (msg.typeCard === "DIAGNOSIS") {
-//     const d = msg.diagnosis;
-//     return (
-//       <Paper sx={{ p: 2.5 }}>
-//         <Stack direction="row" justifyContent="space-between" mb={1}>
-//           <Typography
-//             sx={{
-//               fontSize: 13,
-//               fontWeight: 600,
-//               color: "#4F8787",
-//               mb: 0.5,
-//             }}
-//           >
-//             Diagnosis Analysis
-//           </Typography>
-//           <Box
-//             sx={{
-//               px: 1.5,
-//               py: 0.3,
-//               borderRadius: 10,
-//               fontSize: 12,
-//               fontWeight: 600,
-//               backgroundColor: "#E6F4EA",
-//               color: "#2E7D32",
-//             }}
-//           >
-//             {d.status}
-//           </Box>
-//         </Stack>
-//         <Typography fontSize={14}>
-//           {d.name}, {d.icd}
-//         </Typography>
-//         <Typography fontSize={12} mt={1}>
-//           Confidence Score: {d.confidence}%
-//         </Typography>
-//         <Box
-//           sx={{
-//             height: 6,
-//             backgroundColor: "#E5E7EB",
-//             borderRadius: 4,
-//             mt: 1,
-//           }}
-//         >
-//           <Box
-//             sx={{
-//               width: `${d.confidence}%`,
-//               height: "100%",
-//               backgroundColor: "#4F8787",
-//               borderRadius: 4,
-//             }}
-//           />
-//         </Box>
-//       </Paper>
-//     );
-//   }
- 
-//   if (msg.typeCard === "HOSPITAL_FORM") {
-//     return <HospitalForm onSubmit={msg.onSubmit} />;
-//   }
- 
-//   if (msg.typeCard === "UPLOAD_DOCUMENTS") {
-//     return (
-//       <UploadDocumentsCard
-//         medicalFile={medicalFile}
-//         diagnosticFile={diagnosticFile}
-//         setMedicalFile={setMedicalFile}
-//         setDiagnosticFile={setDiagnosticFile}
-//         showError={showUploadError}
-//       />
-//     );
-//   }
- 
-//   if (msg.typeCard === "EXISTING_CLAIM_STATUS") {
-//     const c = msg.claimDetails;
-//     return (
-//       <Paper sx={{ p: 2.5 }}>
-//         <Stack direction="row" justifyContent="space-between" mb={1}>
-//           <Typography fontWeight={600} color="#4F8787">
-//             Claim for Review
-//           </Typography>
-//           <Box
-//             sx={{
-//               px: 1.5,
-//               py: 0.3,
-//               borderRadius: 10,
-//               fontSize: 12,
-//               fontWeight: 600,
-//               backgroundColor: "#E6F4EA",
-//               color: "#2E7D32",
-//             }}
-//           >
-//             {c.status}
-//           </Box>
-//         </Stack>
-//         <Stack spacing={1}>
-//           <DetailRow label="Case ID" value={c.referenceId} />
-//           <DetailRow label="Policy Number" value={c.policyNumber} />
-//           <DetailRow label="Patient Name" value={c.patientName} />
-//           <DetailRow label="Stage" value={c.stage} highlight />
-//         </Stack>
-//       </Paper>
-//     );
-//   }
- 
-//   // Default message bubble
-//   return (
-//     <Box
-//       sx={{
-//         alignSelf: msg.type === "user" ? "flex-end" : "flex-start",
-//         backgroundColor: msg.type === "user" ? "#4F8787" : "#fff",
-//         color: msg.type === "user" ? "#fff" : "#000",
-//         px: 2,
-//         py: 1,
-//         borderRadius: 2,
-//         maxWidth: "80%",
-//       }}
-//     >
-//       {msg.text}
-//     </Box>
-//   );
-// }
- 
-// export default function Chatbot({ onClose, conversationId })   {
-// const [stage, setStage] = useState("WELCOME"); // WELCOME | POLICY | MEDICAL | DONE
-//   const [input, setInput] = useState("");
-//   const [messages, setMessages] = useState([]);
-//   const [attempts, setAttempts] = useState(0);
-//   const bottomRef = useRef(null);
-//   const [isTyping, setIsTyping] = useState(false);
- 
-//   const [medicalFile, setMedicalFile] = useState(null);
-//   const [diagnosticFile, setDiagnosticFile] = useState(null);
-//   const [showUploadError, setShowUploadError] = useState(false);
- 
-//   const botReplyWithTyping = (callback, delay = 2000) => {
-//     setIsTyping(true);
-//     setTimeout(() => {
-//       setIsTyping(false);
-//       callback();
-//     }, delay);
-//   };
- 
-//   const MAX_ATTEMPTS = 3;
- 
-//   useEffect(() => {
-//     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-//   }, [messages]);
- 
-// const startExistingPreClaim = () => {
-//   botReplyWithTyping(() => {
-//     setMessages([
-//       {
-//         type: "bot",
-//         text:
-//           "Hello! I can help you check the status of your pre-approval request.\n" +
-//           "Please enter Policy Number and Pre-Approval Case ID.",
-//       },
-//     ]);
-//     setStage("EXISTING_CLAIM");
-//   }, 2000);
-// };
-//   const startPreClaim = () => {
-//     botReplyWithTyping(() => {
-//       setMessages([
-//         { type: "bot", text: "Please enter Policy No, SSN and Patient Name" },
-//       ]);
-//       setStage("POLICY");
-//     }, 2000);
-//   };
- 
-//   const validatePolicyInput = (text) => {
-//     const parts = text.split(",").map((p) => p.trim());
-//     if (parts.length < 3) return false;
- 
-//     const policyRegex = /^US-AETNA-\d{8}$/;
-//     const ssnRegex = /^\d{3}-\d{2}-\d{4}$/;
- 
-//     return policyRegex.test(parts[0]) && ssnRegex.test(parts[1]);
-//   };
- 
-//  const validatePreApprovalInput = (text) => {
-//   const parts = text.split(",").map(p => p.trim());
-//   if (parts.length !== 2) return false;
- 
-//   const policyRegex = /^US-AETNA-\d{8}$/;
-//   const caseRegex = /^\d{16}$/;
- 
-//   return policyRegex.test(parts[0]) && caseRegex.test(parts[1]);
-// };
- 
-//   const handleSend = () => {
-//     if (stage === "UPLOAD") {
-//       if (!medicalFile || !diagnosticFile) {
-//         setShowUploadError(true);
-//         return;
-//       }
-//       // ✅ BOTH FILES UPLOADED → AUTO SUBMIT / CREATE CASE
-//       setMessages((p) => [
-//         ...p,
-//         {
-//           type: "bot",
-//           text: "Your pre-claim request has been successfully initiated.",
-//         },
-//       ]);
-//       setStage("DONE");
-//       return;
-//     }
- 
-//     if (!input.trim()) return;
- 
-//     const userText = input;
-//     setInput("");
-//     setMessages((prev) => [...prev, { type: "user", text: userText }]);
- 
-//     /* -------- POLICY STAGE -------- */
-//     if (stage === "POLICY") {
-//       const valid = validatePolicyInput(userText);
- 
-//       if (!valid) {
-//         const next = attempts + 1;
-//         setAttempts(next);
- 
-//         if (next >= MAX_ATTEMPTS) {
-//           setMessages((p) => [...p, { type: "bot", accessRestricted: true }]);
-//           setStage("DONE");
-//         } else {
-//           setMessages((p) => [
-//             ...p,
-//             { type: "bot", text: "Please enter a valid policy number" },
-//           ]);
-//         }
-//         return;
-//       }
- 
-//       const parts = userText.split(",").map((p) => p.trim());
- 
-//       botReplyWithTyping(() => {
-//         setMessages((p) => [
-//           ...p,
-//           {
-//             type: "bot",
-//             typeCard: "IDENTITY_VERIFIED",
-//             policyDetails: {
-//               policyNumber: parts[0],
-//               ssn: parts[1],
-//               status: "Active",
-//               type: "Family Floater",
-//               members: [`${parts[2]} (Self)`, "Spouse", "Child"],
-//             },
-//           },
-//         ]);
- 
-//         botReplyWithTyping(() => {
-//           setMessages((p) => [
-//             ...p,
-//             {
-//               type: "bot",
-//               text:
-//                 "Please describe your medical condition.\nDiagnosis/Disease name\nICD-10 code(s)",
-//             },
-//           ]);
-//           setStage("MEDICAL");
-//         }, 2000);
-//       });
- 
-//       return;
-//     }
- 
-//     /* -------- EXISTING PRE-CLAIM -------- */
-// if (stage === "EXISTING_CLAIM") {
-//   const valid = validatePreApprovalInput(userText);
- 
-//   if (!valid) {
-//     setMessages(p => [
-//       ...p,
-//       {
-//         type: "bot",
-//         text:
-//           "The details provided are invalid. Please check and re-enter your Policy Number and Pre-Approval Case ID.",
-//       },
-//     ]);
-//     return;
-//   }
- 
-//   const [policyNumber, caseId] = userText.split(",").map(p => p.trim());
- 
-//   botReplyWithTyping(() => {
-//     setMessages(p => [
-//       ...p,
-//       { type: "bot", text: "Fetching your pre-approval request details..." },
-//     ]);
- 
-//     // 🔽 Simulating backend response
-//     botReplyWithTyping(() => {
-//       const dummyResponse = {
-//         caseId,
-//         hospitalName: "Apollo Hospitals",
-//         treatmentType: "Planned Surgery",
-//         submissionDate: "14 Feb 2026",
- 
-//         // 👉 CHANGE THIS VALUE TO TEST DIFFERENT FLOWS
-//         status: "Rejected", // Approved | Rejected | Under Medical Review
- 
-//         // Approved-only
-//         approvedAmount: "₹2,50,000",
-//         validityPeriod: "30 Days",
- 
-//         // Rejected-only
-//         rejectionReason: "Requested treatment is not covered under your policy",
-//       };
- 
-//       setMessages(p => [
-//         ...p,
-//         {
-//           type: "bot",
-//           typeCard: "PRE_APPROVAL_STATUS",
-//           preApproval: dummyResponse,
-//         },
-//       ]);
-//       setStage("DONE");
-//     }, 2000);
-//   }, 1500);
- 
-//   return;
-// }    if (stage === "MEDICAL") {
-//       botReplyWithTyping(() => {
-//         setMessages((p) => [
-//           ...p,
-//           {
-//             type: "bot",
-//             typeCard: "DIAGNOSIS",
-//             diagnosis: {
-//               confidence: 87,
-//               status: "Eligible",
-//               name: "Diabetes Mellitus",
-//               icd: "E11.9"
-//             },
-//           },
-//         ]);
- 
-//         // Ask next question
-//         botReplyWithTyping(() => {
-//           setMessages((p) => [
-//             ...p,
-//             {
-//               type: "bot",
-//               text: "Please provide the hospital and treatment details",
-//             },
-//             {
-//               type: "bot",
-//               typeCard: "HOSPITAL_FORM",
-//             },
-//             {
-//               type: "bot",
-//               text: "Everything looks good! Please upload your documents.",
-//             },
-//             {
-//               type: "bot",
-//               typeCard: "UPLOAD_DOCUMENTS",
-//             }
-//           ]);
-//           setStage("UPLOAD");
-//         }, 2000);
-//       }, 3000);
- 
-//       return;
-//     }
-//   };
- 
-//   return (
-//     <>
-//       {/* BACKDROP */}
-//       <Box
-//         sx={{
-//           position: "fixed",
-//           inset: 0,
-//           backdropFilter: "blur(6px)",
-//           backgroundColor: "rgba(0,0,0,0.15)",
-//           zIndex: 2000,
-//         }}
-//       />
- 
-//       {/* CHAT WINDOW */}
-//       <Paper
-//         elevation={8}
-//         sx={{
-//           position: "fixed",
-//           right: 40,
-//           top: "50%",
-//           transform: "translateY(-50%)",
-//           width: 460,
-//           height: 420,
-//           borderRadius: 3,
-//           display: "flex",
-//           flexDirection: "column",
-//           zIndex: 2100,
-//         }}
-//       >
-//         {/* HEADER */}
-//         <Box
-//           sx={{
-//             backgroundColor: "#4F8787",
-//             color: "#fff",
-//             px: 2,
-//             py: 1.5,
-//             display: "flex",
-//             justifyContent: "space-between",
-//           }}
-//         >
-//           <Stack direction="row" spacing={1}>
-//             <Box component="img" src={chatbotIcon} sx={{ width: 24 }} />
-//             <Box>
-//               <Typography fontWeight={600}>Aaseya AI</Typography>
-//               <Typography fontSize={11}>Online Support</Typography>
-//             </Box>
-//           </Stack>
-//           <IconButton onClick={onClose}>
-//             <CloseIcon sx={{ color: "#fff" }} />
-//           </IconButton>
-//         </Box>
- 
-//         {/* CHAT BODY */}
-//         <Box
-//           sx={{
-//             flex: 1,
-//             p: 2,
-//             backgroundColor: "#F4F7F7",
-//             overflowY: "auto",
-//             display: "flex",
-//             flexDirection: "column",
-//             gap: 1,
-//           }}
-//         >
-//          {stage === "WELCOME" && (
-//   <Paper sx={{ p: 4 }}>
-//     <Typography fontWeight={600}>
-//       Hi! I can help you start a pre-claim approval or check an existing request.
-//     </Typography>
- 
-//     <Stack spacing={2} mt={3}>
-//       <Button
-//         fullWidth
-//         variant="contained"
-//         sx={{
-//           backgroundColor: "#4F8787",
-//           color:"#fff",
-//           borderRadius: "999px",   // ✅ pill shape
-//           textTransform: "none",   // optional: keeps text clean
-//           py: 1.2,  
-//            fontWeight: 600,              // optional: better height like XD
-//         }}
-//         onClick={startPreClaim}
-//       >
-//         Initiate New Pre-Claim
-//       </Button>
- 
-//       <Button
-//         fullWidth
-//         variant="outlined"
-//         sx={{
-//           borderColor: "#4F8787",
-//           color: "#4F8787",
-//           borderRadius: "999px",   // ✅ pill shape
-//           textTransform: "none",
-//           py: 1.2,
-//            fontWeight: 600,
-//         }}
-//         onClick={startExistingPreClaim}
-//       >
-//         Check Existing Pre-Claim Status
-//       </Button>
-//     </Stack>
-//   </Paper>
-// )}
- 
-//           {messages.map((msg, i) => (
-//             <ChatBubble
-//               key={i}
-//               msg={msg}
-//               medicalFile={medicalFile}
-//               diagnosticFile={diagnosticFile}
-//               setMedicalFile={setMedicalFile}
-//               setDiagnosticFile={setDiagnosticFile}
-//               showUploadError={showUploadError}
-//             />
-//           ))}
-         
-//           {isTyping && (
-//             <Box sx={{ alignSelf: "flex-start" }}>
-//               <Paper sx={{ p: 1.2, borderRadius: 2 }}>
-//                 <Typography fontSize={13} color="text.secondary">
-//                   typing…
-//                 </Typography>
-//               </Paper>
-//             </Box>
-//           )}
- 
-//           <div ref={bottomRef} />
-//         </Box>
- 
-//         {/* INPUT */}
-//         {stage !== "WELCOME" && (
-//           <Box sx={{ p: 1.5, display: "flex", gap: 1 }}>
-//             <TextField
-//               fullWidth
-//               size="small"
-//               placeholder="Type your message…"
-//               value={input}
-//               onChange={(e) => setInput(e.target.value)}
-//               onKeyDown={(e) => e.key === "Enter" && handleSend()}
-//             />
-//             <IconButton
-//               onClick={handleSend}
-//               sx={{ backgroundColor: "#4F8787", color: "#fff" }}
-//             >
-//               <SendIcon />
-//             </IconButton>
-//           </Box>
-//         )}
-//       </Paper>
-//     </>
-//   );
-// }
 import { useState, useEffect, useRef } from "react";
 import {
   Box,
@@ -900,9 +7,12 @@ import {
   Stack,
   Button,
   IconButton,
+  CircularProgress,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import SendIcon from "@mui/icons-material/Send";
+import AttachFileIcon from "@mui/icons-material/AttachFile";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import chatbotIcon from "../assets/noun-chatbot-6794264.svg";
 
 /* ================= TOKEN HELPER ================= */
@@ -938,25 +48,29 @@ const getAccessToken = async () => {
   return data.access_token;
 };
 
-export default function Chatbot({ onClose }) {
-  const [conversationId, setConversationId] = useState(null);
+export default function Chatbot({ onClose, conversationId: externalConversationId }) {
+  const [conversationId, setConversationId] = useState(externalConversationId || null);
   const [stage, setStage] = useState("WELCOME");
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([]);
+  const [showUpload, setShowUpload] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [chatCompleted, setChatCompleted] = useState(false);
+  const [preClaimRef, setPreClaimRef] = useState(null);
+  const [uploadFiles, setUploadFiles] = useState({ medical: null, diagnostic: null, insurance: null });
 
   const bottomRef = useRef(null);
+  const fileInputRef = useRef(null);
   const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   /* ================= START CHAT ================= */
   const startChat = async () => {
     try {
-      const token = await getAccessToken();
-
+      // Chat endpoints are public (no auth required)
       const res = await fetch(`${BASE_URL}/api/chat/start`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ userMessage: "hi" }),
       });
@@ -964,6 +78,7 @@ export default function Chatbot({ onClose }) {
       if (!res.ok) throw new Error("Start chat failed");
 
       const data = await res.json();
+      console.log("Chat started, conversationId:", data.conversationId);
       setConversationId(data.conversationId);
     } catch (err) {
       console.error("Start Chat Error:", err);
@@ -971,7 +86,30 @@ export default function Chatbot({ onClose }) {
   };
 
   useEffect(() => {
-    startChat();
+    // Only start a new chat if no conversationId was passed as prop
+    if (externalConversationId) return;
+
+    // Guard against React StrictMode double-mount
+    let cancelled = false;
+    const init = async () => {
+      try {
+        const res = await fetch(`${BASE_URL}/api/chat/start`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userMessage: "hi" }),
+        });
+        if (!res.ok) throw new Error("Start chat failed");
+        const data = await res.json();
+        if (!cancelled) {
+          console.log("Chat started, conversationId:", data.conversationId);
+          setConversationId(data.conversationId);
+        }
+      } catch (err) {
+        console.error("Start Chat Error:", err);
+      }
+    };
+    init();
+    return () => { cancelled = true; };
   }, []);
 
   useEffect(() => {
@@ -986,8 +124,6 @@ export default function Chatbot({ onClose }) {
         return;
       }
 
-      const token = await getAccessToken();
-
       const formData = new FormData();
 
       const payload = {
@@ -1001,30 +137,105 @@ export default function Chatbot({ onClose }) {
         new Blob([JSON.stringify(payload)], { type: "application/json" })
       );
 
-      await fetch(`${BASE_URL}/api/chat/message`, {
+      // Show typing indicator while waiting
+      const typingIdx = Date.now();
+      setMessages((prev) => [
+        ...prev,
+        { type: "bot", text: "Typing...", _typing: typingIdx },
+      ]);
+
+      // Chat endpoints are public (no auth required)
+      // POST /message blocks until reply is ready (up to 30s) and returns the full reply
+      const msgRes = await fetch(`${BASE_URL}/api/chat/message`, {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
         body: formData,
       });
 
-      const replyRes = await fetch(
-        `${BASE_URL}/api/chat/reply/${conversationId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+      if (!msgRes.ok) {
+        console.error("Message POST failed:", msgRes.status);
+        setMessages((prev) =>
+          prev.map((m) =>
+            m._typing === typingIdx
+              ? { type: "bot", text: "Failed to send message. Please try again." }
+              : m
+          )
+        );
+        return;
+      }
+
+      // Use POST response directly — it already contains the fresh reply data.
+      // Avoids stale Operate data from a separate GET /reply call.
+      const replyData = await msgRes.json();
+
+      // Replace typing indicator with actual reply
+      const botText = (replyData.text || "Processing your request...").toLowerCase();
+
+      // BPMN conversationState takes highest priority over keyword matching
+      const isBpmnUpload = replyData.conversationState === "Uploadthedocuments";
+
+      // Detect upload request (keywords as fallback)
+      const isUploadRequest =
+        isBpmnUpload ||
+        botText.includes("uploading documents") ||
+        botText.includes("upload your") ||
+        botText.includes("please upload") ||
+        botText.includes("documents are uploaded") ||
+        botText.includes("medical documents");
+
+      // Detect confirmation keywords (only when NOT an upload request)
+      const isConfirmation =
+        !isUploadRequest &&
+        (botText.includes("do you want to proceed") ||
+          botText.includes("ensure all") ||
+          botText.includes("would you like to") ||
+          botText.includes("shall we proceed") ||
+          botText.includes("confirm") ||
+          botText.includes("ready to proceed") ||
+          botText.includes("do you wish"));
+
+      // Check if this is a terminal/completion message
+      const isCompletion =
+        replyData.done === true ||
+        (replyData.conversationState === "Uploadthedocuments" &&
+          botText.includes("proceeding"));
+
+      if (isCompletion) {
+        setChatCompleted(true);
+        setPreClaimRef(replyData.conversationId || conversationId);
+        setShowConfirm(false);
+        setShowUpload(false);
+      } else if (isUploadRequest) {
+        setShowUpload(true);
+        setShowConfirm(false);
+      } else if (isConfirmation) {
+        setShowConfirm(true);
+        setShowUpload(false);
+      } else {
+        setShowConfirm(false);
+        setShowUpload(false);
+      }
+
+      setMessages((prev) =>
+        prev.map((m) =>
+          m._typing === typingIdx
+            ? {
+                type: "bot",
+                text: replyData.text || "Processing your request...",
+                ...replyData,
+              }
+            : m
+        )
       );
-
-      if (!replyRes.ok) throw new Error("Reply failed");
-
-      const replyData = await replyRes.json();
-
-      setMessages((prev) => [...prev, replyData]);
     } catch (err) {
       console.error("Message Error:", err);
+      setMessages((prev) => {
+        // Remove typing indicator if present, add error message
+        const filtered = prev.filter((m) => !m._typing);
+        return [
+          ...filtered,
+          { type: "bot", text: "Something went wrong. Please try again." },
+        ];
+      });
     }
   };
 
@@ -1037,24 +248,204 @@ export default function Chatbot({ onClose }) {
 
     setMessages((prev) => [...prev, { type: "user", text: userText }]);
 
+    if (stage === "CLAIM_LOOKUP") {
+      await lookupClaimStatus(userText.trim());
+      return;
+    }
+
     await sendMessageToBackend(userText);
+  };
+
+  /* ================= UPLOAD DOCUMENTS ================= */
+  const handleFileSelect = (type) => (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setUploadFiles((prev) => ({ ...prev, [type]: file }));
+    }
+  };
+
+  const handleUploadSubmit = async () => {
+    if (!uploadFiles.medical && !uploadFiles.diagnostic && !uploadFiles.insurance) return;
+
+    const fileNames = [
+      uploadFiles.medical?.name,
+      uploadFiles.diagnostic?.name,
+      uploadFiles.insurance?.name,
+    ]
+      .filter(Boolean)
+      .join(", ");
+
+    setMessages((prev) => [
+      ...prev,
+      { type: "user", text: `Uploaded: ${fileNames}` },
+    ]);
+    setShowUpload(false);
+
+    // Send confirmation message with files attached
+    const formData = new FormData();
+    const payload = {
+      conversationId,
+      userMessage: "Documents uploaded",
+      selectedOption: "Uploadthedocuments",
+    };
+    formData.append(
+      "message",
+      new Blob([JSON.stringify(payload)], { type: "application/json" })
+    );
+    if (uploadFiles.medical) {
+      formData.append("documents", uploadFiles.medical);
+    }
+    if (uploadFiles.diagnostic) {
+      formData.append("documents", uploadFiles.diagnostic);
+    }
+    if (uploadFiles.insurance) {
+      formData.append("documents", uploadFiles.insurance);
+    }
+
+    const typingIdx = Date.now();
+    setMessages((prev) => [
+      ...prev,
+      { type: "bot", text: "Typing...", _typing: typingIdx },
+    ]);
+
+    try {
+      // POST /message blocks until reply is ready and returns fresh data
+      const msgRes = await fetch(`${BASE_URL}/api/chat/message`, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!msgRes.ok) throw new Error("Upload message failed");
+
+      // Use POST response directly — avoids stale Operate data from GET /reply
+      const replyData = await msgRes.json();
+
+      // After upload, do NOT re-show the upload panel.
+      // conversationState=Uploadthedocuments here means "documents received, proceeding"
+      // — NOT "upload more documents". Only show confirm if the reply asks for it.
+      const uploadReplyText = (replyData.text || "").toLowerCase();
+      if (
+        replyData.conversationState === "Uploadthedocuments" ||
+        uploadReplyText.includes("proceeding") ||
+        replyData.done === true
+      ) {
+        // Chat flow is complete — pre-claim has been initiated
+        setChatCompleted(true);
+        setPreClaimRef(replyData.conversationId || conversationId);
+        setShowConfirm(false);
+        setShowUpload(false);
+      } else if (
+        uploadReplyText.includes("do you want to proceed") ||
+        uploadReplyText.includes("confirm") ||
+        uploadReplyText.includes("ready to proceed")
+      ) {
+        setShowConfirm(true);
+      }
+
+      setMessages((prev) =>
+        prev.map((m) =>
+          m._typing === typingIdx
+            ? {
+                type: "bot",
+                text: replyData.text || "Documents received. Processing...",
+                ...replyData,
+              }
+            : m
+        )
+      );
+    } catch (err) {
+      console.error("Upload Error:", err);
+      setMessages((prev) =>
+        prev.map((m) =>
+          m._typing === typingIdx
+            ? { type: "bot", text: "Failed to upload. Please try again." }
+            : m
+        )
+      );
+    }
+
+    setUploadFiles({ medical: null, diagnostic: null, insurance: null });
+  };
+
+  /* ================= YES / NO CONFIRMATION ================= */
+  const handleConfirm = async (choice) => {
+    setShowConfirm(false);
+    setMessages((prev) => [...prev, { type: "user", text: choice }]);
+    await sendMessageToBackend(choice, choice);
   };
 
   /* ================= WELCOME BUTTONS ================= */
   const startPreClaim = async () => {
     setStage("CHAT");
+    setMessages((prev) => [
+      ...prev,
+      { type: "user", text: "Initiate new pre claim" },
+    ]);
     await sendMessageToBackend(
       "Initiate new pre claim",
       "Initiate new pre claim"
     );
   };
 
-  const startExistingPreClaim = async () => {
-    setStage("CHAT");
-    await sendMessageToBackend(
-      "Check existing pre claim",
-      "Check existing pre claim"
-    );
+  const startExistingPreClaim = () => {
+    setStage("CLAIM_LOOKUP");
+    setMessages([
+      {
+        type: "bot",
+        text: "Please provide your Claim ID to check the status.",
+      },
+    ]);
+  };
+
+  /* ================= DIRECT CLAIM LOOKUP ================= */
+  const lookupClaimStatus = async (claimId) => {
+    const typingIdx = Date.now();
+    setMessages((prev) => [
+      ...prev,
+      { type: "bot", text: "Typing...", _typing: typingIdx },
+    ]);
+
+    try {
+      const res = await fetch(`${BASE_URL}/api/chat/claim-status/${encodeURIComponent(claimId)}`);
+      if (!res.ok) throw new Error(`Lookup failed: ${res.status}`);
+
+      const data = await res.json();
+
+      if (!data.success) {
+        setMessages((prev) =>
+          prev.map((m) =>
+            m._typing === typingIdx
+              ? {
+                  type: "bot",
+                  text: data.errorCode === "CLAIM_NOT_FOUND"
+                    ? "No claim found with that ID. Please check and try again."
+                    : `Error: ${data.errorMessage || "Something went wrong."}`,
+                }
+              : m
+          )
+        );
+        return;
+      }
+
+      // Success — show claim status card
+      setMessages((prev) =>
+        prev.map((m) =>
+          m._typing === typingIdx
+            ? { type: "bot", text: "", _claimCard: data }
+            : m
+        )
+      );
+      setChatCompleted(true);
+    } catch (err) {
+      console.error("Claim lookup error:", err);
+      setMessages((prev) =>
+        prev.map((m) =>
+          m._typing === typingIdx
+            ? { type: "bot", text: "Failed to fetch claim status. Please try again." }
+            : m
+        )
+      );
+    }
   };
 
   /* ================= UI ================= */
@@ -1156,14 +547,330 @@ export default function Chatbot({ onClose }) {
           )}
 
           {messages.map((msg, i) => (
-            <Box key={i}>{JSON.stringify(msg)}</Box>
+            <Box
+              key={i}
+              sx={{
+                display: "flex",
+                justifyContent: msg.type === "user" ? "flex-end" : "flex-start",
+                mb: 1,
+              }}
+            >
+              {/* ---- CLAIM STATUS CARD ---- */}
+              {msg._claimCard ? (
+                <Paper
+                  elevation={2}
+                  sx={{ p: 2.5, maxWidth: "90%", borderRadius: 2 }}
+                >
+                  <Stack direction="row" justifyContent="space-between" alignItems="center" mb={1.5}>
+                    <Typography fontWeight={600} color="#4F8787">
+                      Claim Status
+                    </Typography>
+                    <Box
+                      sx={{
+                        px: 1.5, py: 0.3, borderRadius: 10, fontSize: 12, fontWeight: 600,
+                        backgroundColor:
+                          msg._claimCard.status === "Approved" ? "#E6F4EA"
+                          : msg._claimCard.status === "Rejected" ? "#FDECEA"
+                          : "#FFF3E0",
+                        color:
+                          msg._claimCard.status === "Approved" ? "#2E7D32"
+                          : msg._claimCard.status === "Rejected" ? "#D32F2F"
+                          : "#E65100",
+                      }}
+                    >
+                      {msg._claimCard.status || "Unknown"}
+                    </Box>
+                  </Stack>
+
+                  <Stack spacing={0.8}>
+                    {msg._claimCard.claimId && (
+                      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                        <Typography fontSize={13} color="#6B7280">Claim ID</Typography>
+                        <Typography fontSize={13} fontWeight={600}>{msg._claimCard.claimId}</Typography>
+                      </Box>
+                    )}
+                    {msg._claimCard.stage && (
+                      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                        <Typography fontSize={13} color="#6B7280">Stage</Typography>
+                        <Typography fontSize={13} fontWeight={600}>{msg._claimCard.stage}</Typography>
+                      </Box>
+                    )}
+                    {msg._claimCard.treatmentType && (
+                      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                        <Typography fontSize={13} color="#6B7280">Treatment Type</Typography>
+                        <Typography fontSize={13} fontWeight={600}>{msg._claimCard.treatmentType}</Typography>
+                      </Box>
+                    )}
+                    {msg._claimCard.hospitalName && (
+                      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                        <Typography fontSize={13} color="#6B7280">Hospital</Typography>
+                        <Typography fontSize={13} fontWeight={600}>{msg._claimCard.hospitalName}</Typography>
+                      </Box>
+                    )}
+                    {msg._claimCard.diagnosisCode && (
+                      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                        <Typography fontSize={13} color="#6B7280">Diagnosis Code</Typography>
+                        <Typography fontSize={13} fontWeight={600}>{msg._claimCard.diagnosisCode}</Typography>
+                      </Box>
+                    )}
+                    {msg._claimCard.approvedAmount && (
+                      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                        <Typography fontSize={13} color="#6B7280">Approved Amount</Typography>
+                        <Typography fontSize={13} fontWeight={600}>{msg._claimCard.approvedAmount}</Typography>
+                      </Box>
+                    )}
+                    {msg._claimCard.validityPeriod && (
+                      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                        <Typography fontSize={13} color="#6B7280">Validity</Typography>
+                        <Typography fontSize={13} fontWeight={600}>{msg._claimCard.validityPeriod}</Typography>
+                      </Box>
+                    )}
+                    {msg._claimCard.createdAt && (
+                      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                        <Typography fontSize={13} color="#6B7280">Created</Typography>
+                        <Typography fontSize={13} fontWeight={600}>
+                          {new Date(msg._claimCard.createdAt).toLocaleDateString()}
+                        </Typography>
+                      </Box>
+                    )}
+                  </Stack>
+
+                  {/* Person info */}
+                  {msg._claimCard.person && (
+                    <Box sx={{ mt: 1.5, pt: 1.5, borderTop: "1px solid #E5E7EB" }}>
+                      <Typography fontSize={12} fontWeight={600} color="#4F8787" mb={0.5}>
+                        Patient
+                      </Typography>
+                      <Stack spacing={0.5}>
+                        {msg._claimCard.person.name && (
+                          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                            <Typography fontSize={12} color="#6B7280">Name</Typography>
+                            <Typography fontSize={12} fontWeight={600}>{msg._claimCard.person.name}</Typography>
+                          </Box>
+                        )}
+                        {msg._claimCard.person.ssn && (
+                          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                            <Typography fontSize={12} color="#6B7280">SSN</Typography>
+                            <Typography fontSize={12} fontWeight={600}>{msg._claimCard.person.ssn}</Typography>
+                          </Box>
+                        )}
+                      </Stack>
+                    </Box>
+                  )}
+
+                  {/* Policy info */}
+                  {msg._claimCard.policy && (
+                    <Box sx={{ mt: 1, pt: 1, borderTop: "1px solid #E5E7EB" }}>
+                      <Typography fontSize={12} fontWeight={600} color="#4F8787" mb={0.5}>
+                        Policy
+                      </Typography>
+                      <Stack spacing={0.5}>
+                        {msg._claimCard.policy.policyNumber && (
+                          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                            <Typography fontSize={12} color="#6B7280">Policy Number</Typography>
+                            <Typography fontSize={12} fontWeight={600}>{msg._claimCard.policy.policyNumber}</Typography>
+                          </Box>
+                        )}
+                        {msg._claimCard.policy.sumInsured && (
+                          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                            <Typography fontSize={12} color="#6B7280">Sum Insured</Typography>
+                            <Typography fontSize={12} fontWeight={600}>{msg._claimCard.policy.sumInsured}</Typography>
+                          </Box>
+                        )}
+                      </Stack>
+                    </Box>
+                  )}
+                </Paper>
+              ) : (
+              <Paper
+                elevation={1}
+                sx={{
+                  p: 1.5,
+                  maxWidth: "80%",
+                  borderRadius: 2,
+                  backgroundColor:
+                    msg.type === "user" ? "#4F8787" : "#F5F5F5",
+                  color: msg.type === "user" ? "#fff" : "#333",
+                  ...(msg._typing && {
+                    "@keyframes pulse": {
+                      "0%, 100%": { opacity: 1 },
+                      "50%": { opacity: 0.5 },
+                    },
+                    animation: "pulse 1.5s ease-in-out infinite",
+                  }),
+                }}
+              >
+                {msg._typing ? (
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    <CircularProgress size={16} sx={{ color: "#4F8787" }} />
+                    <Typography fontSize={14} sx={{ color: "#555" }}>
+                      Processing your request...
+                    </Typography>
+                  </Box>
+                ) : (
+                  <Typography
+                    fontSize={14}
+                    sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}
+                  >
+                    {msg.text || ""}
+                  </Typography>
+                )}
+              </Paper>
+              )}
+            </Box>
           ))}
 
           <div ref={bottomRef} />
         </Box>
 
+        {/* UPLOAD DOCUMENTS PANEL */}
+        {showUpload && (
+          <Paper
+            sx={{
+              mx: 1.5,
+              mb: 1,
+              p: 2,
+              borderRadius: 2,
+              border: "1px dashed #4F8787",
+              backgroundColor: "#F0F7F7",
+            }}
+          >
+            <Typography fontSize={13} fontWeight={600} sx={{ mb: 1.5, color: "#355E60" }}>
+              Upload Documents
+            </Typography>
+
+            {/* Medical Form */}
+            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 1 }}>
+              <Box>
+                <Typography fontSize={13} fontWeight={500}>Medical Form</Typography>
+                <Typography fontSize={11} color={uploadFiles.medical ? "#2E7D32" : "text.secondary"}>
+                  {uploadFiles.medical ? uploadFiles.medical.name : "No file selected"}
+                </Typography>
+              </Box>
+              <Button
+                size="small"
+                variant="outlined"
+                component="label"
+                startIcon={<AttachFileIcon />}
+                sx={{ borderColor: "#4F8787", color: "#4F8787", textTransform: "none", fontSize: 12 }}
+              >
+                Choose
+                <input type="file" hidden accept=".pdf,.jpg,.png,.doc,.docx" onChange={handleFileSelect("medical")} />
+              </Button>
+            </Box>
+
+            {/* Diagnostic Report */}
+            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 1.5 }}>
+              <Box>
+                <Typography fontSize={13} fontWeight={500}>Diagnostic Report</Typography>
+                <Typography fontSize={11} color={uploadFiles.diagnostic ? "#2E7D32" : "text.secondary"}>
+                  {uploadFiles.diagnostic ? uploadFiles.diagnostic.name : "No file selected"}
+                </Typography>
+              </Box>
+              <Button
+                size="small"
+                variant="outlined"
+                component="label"
+                startIcon={<AttachFileIcon />}
+                sx={{ borderColor: "#4F8787", color: "#4F8787", textTransform: "none", fontSize: 12 }}
+              >
+                Choose
+                <input type="file" hidden accept=".pdf,.jpg,.png,.doc,.docx" onChange={handleFileSelect("diagnostic")} />
+              </Button>
+            </Box>
+
+            {/* Insurance Card */}
+            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 1.5 }}>
+              <Box>
+                <Typography fontSize={13} fontWeight={500}>Insurance Card</Typography>
+                <Typography fontSize={11} color={uploadFiles.insurance ? "#2E7D32" : "text.secondary"}>
+                  {uploadFiles.insurance ? uploadFiles.insurance.name : "No file selected"}
+                </Typography>
+              </Box>
+              <Button
+                size="small"
+                variant="outlined"
+                component="label"
+                startIcon={<AttachFileIcon />}
+                sx={{ borderColor: "#4F8787", color: "#4F8787", textTransform: "none", fontSize: 12 }}
+              >
+                Choose
+                <input type="file" hidden accept=".pdf,.jpg,.png,.doc,.docx" onChange={handleFileSelect("insurance")} />
+              </Button>
+            </Box>
+
+            <Button
+              fullWidth
+              variant="contained"
+              startIcon={<CloudUploadIcon />}
+              disabled={!uploadFiles.medical && !uploadFiles.diagnostic && !uploadFiles.insurance}
+              onClick={handleUploadSubmit}
+              sx={{
+                backgroundColor: "#4F8787",
+                textTransform: "none",
+                "&:hover": { backgroundColor: "#355E60" },
+              }}
+            >
+              Upload & Continue
+            </Button>
+          </Paper>
+        )}
+
+        {/* YES / NO CONFIRMATION */}
+        {showConfirm && (
+          <Box sx={{ px: 1.5, pb: 1, display: "flex", gap: 1.5, justifyContent: "center" }}>
+            <Button
+              variant="contained"
+              onClick={() => handleConfirm("Yes")}
+              sx={{
+                flex: 1,
+                backgroundColor: "#4F8787",
+                borderRadius: "999px",
+                textTransform: "none",
+                fontWeight: 600,
+                "&:hover": { backgroundColor: "#355E60" },
+              }}
+            >
+              Yes
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={() => handleConfirm("No")}
+              sx={{
+                flex: 1,
+                borderColor: "#4F8787",
+                color: "#4F8787",
+                borderRadius: "999px",
+                textTransform: "none",
+                fontWeight: 600,
+              }}
+            >
+              No
+            </Button>
+          </Box>
+        )}
+
+        {/* COMPLETION BANNER */}
+        {chatCompleted && (
+          <Box sx={{ p: 2, textAlign: "center", backgroundColor: "#e8f5e9", borderTop: "1px solid #c8e6c9" }}>
+            <Typography variant="body2" sx={{ color: "#2e7d32", fontWeight: 600 }}>
+              {stage === "CLAIM_LOOKUP"
+                ? "Claim details retrieved successfully!"
+                : "Pre-claim initiated successfully!"}
+            </Typography>
+            {preClaimRef && stage !== "CLAIM_LOOKUP" && (
+              <Typography variant="body2" sx={{ color: "#2e7d32", mt: 0.5 }}>
+                Pre-Claim Reference: <strong>{preClaimRef}</strong>
+              </Typography>
+            )}
+            <Typography variant="caption" sx={{ color: "#558b2f", mt: 0.5, display: "block" }}>
+              You can track its status from the dashboard.
+            </Typography>
+          </Box>
+        )}
+
         {/* INPUT */}
-        {stage !== "WELCOME" && (
+        {stage !== "WELCOME" && !showUpload && !showConfirm && !chatCompleted && (
           <Box sx={{ p: 1.5, display: "flex", gap: 1 }}>
             <TextField
               fullWidth
