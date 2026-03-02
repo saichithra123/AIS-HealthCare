@@ -272,20 +272,21 @@ console.log("Resolved App Role:", userRole);
           />
 
           <Button
-            fullWidth
-            variant="contained"
-            disabled={loading}
-            onClick={handleLogin}
-            sx={{
-              bgcolor: "#5A9BA5",
-              borderRadius: 12,
-              py: 1.4,
-              mb: 2,
-              "&:hover": { bgcolor: "#4A8A94" },
-            }}
-          >
-            {loading ? "Logging in..." : "LOGIN"}
-          </Button>
+  fullWidth
+  variant="contained"
+  disabled={loading}
+  onClick={handleLogin}
+  sx={{
+    bgcolor: "#5A9BA5",
+    color: "#fff",   
+    borderRadius: 12,
+    py: 1.4,
+    mb: 2,
+    "&:hover": { bgcolor: "#4A8A94" },
+  }}
+>
+  {loading ? "Logging in..." : "LOGIN"}
+</Button>
 
           <Box textAlign="center">
             <Link sx={{ fontSize: 13, color: "#5A9BA5" }}>

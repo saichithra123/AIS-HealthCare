@@ -107,15 +107,15 @@ const handleSubmit = async () => {
 
     const claimId = result.processInstanceKey;
 
-    const assignResponse = await fetch(
-      `${baseUrl}/healthcare/assignToClaimAssessor?claimId=${claimId}&claimAssessorId=${username}`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    // const assignResponse = await fetch(
+    //   `${baseUrl}/healthcare/assignToClaimAssessor?claimId=${claimId}&claimAssessorId=${username}`,
+    //   {
+    //     method: "POST",
+    //     headers: {
+    //       Authorization: `Bearer ${token}`,
+    //     },
+    //   }
+    // );
 
     if (!assignResponse.ok) {
       throw new Error("Assignment failed");
