@@ -27,53 +27,137 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  // 🔐 KEYCLOAK PASSWORD LOGIN
-const CLIENT_ID = import.meta.env.VITE_KEYCLOAK_CLIENT_ID;
+  const CLIENT_ID = import.meta.env.VITE_KEYCLOAK_CLIENT_ID;
+  const BASE_URL = import.meta.env.VITE_KEYCLOAK_BASE_URL;
+  const REALM = import.meta.env.VITE_KEYCLOAK_REALM;
 
-const handleLogin = async () => {
-  if (!email || !password) {
-    alert("Please enter username and password");
-    return;
-  }
 
-  setLoading(true);
 
-  const params = new URLSearchParams();
-  params.append("grant_type", "password");
-  params.append("client_id", CLIENT_ID);
-  params.append("username", email.trim());
-  params.append("password", password);
+  // 🔥 Decode JWT Token
+  const decodeToken = (token) => {
+    const base64Url = token.split(".")[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split("")
+        .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+        .join("")
+    );
+    return JSON.parse(jsonPayload);
+  };
 
-  const TOKEN_URL = `${import.meta.env.VITE_KEYCLOAK_BASE_URL}/realms/${import.meta.env.VITE_KEYCLOAK_REALM}/protocol/openid-connect/token`;
-
-  try {
-    const response = await fetch(TOKEN_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: params.toString(),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.error_description || "Login failed");
+  // 🔥 LOGIN
+  const handleLogin = async () => {
+    if (!email || !password) {
+      alert("Please enter username and password");
+      return;
     }
 
-    localStorage.setItem("access_token", data.access_token);
-    localStorage.setItem("refresh_token", data.refresh_token);
-    localStorage.setItem("username", email);
+    setLoading(true);
 
-    navigate("/registration");
-  } catch (err) {
-    console.error("Login error:", err);
-    alert("Login failed. Please check credentials");
-  } finally {
-    setLoading(false);
-  }
-};
+    const params = new URLSearchParams();
+    params.append("grant_type", "password");
+    params.append("client_id", CLIENT_ID);
+    params.append("username", email.trim());
+    params.append("password", password);
 
+    const TOKEN_URL = `${BASE_URL}/realms/${REALM}/protocol/openid-connect/token`;
+
+    console.log(`TOKEN_URL: ${TOKEN_URL}`)
+
+    try {
+      const response = await fetch(TOKEN_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: params.toString(),
+      });
+
+      const data = await response.json();
+
+      console.log("Data is:", data)
+
+      if (!response.ok) {
+        throw new Error(data.error_description || "Login failed");
+      }
+
+      // ✅ Store tokens
+      localStorage.setItem("access_token", data.access_token);
+      localStorage.setItem("refresh_token", data.refresh_token);
+      localStorage.setItem("username", email);
+
+      // 🔥 Decode token
+const decoded = decodeToken(data.access_token);
+
+const clientRoles =
+  decoded.resource_access?.[CLIENT_ID]?.roles || [];
+
+console.log("Client Roles:", clientRoles);
+
+let userRole = "CUSTOMER";
+
+// FORCE pure claimant role first
+if (
+  clientRoles.some(role =>
+    role.toLowerCase().includes("cutomer") &&
+    !role.toLowerCase().includes("approver") &&
+    !role.toLowerCase().includes("manager") &&
+    !role.toLowerCase().includes("finance")
+  )
+) {
+  console.log("Entered CUSTSS")
+  userRole = "CUSTOMER";
+}
+else if (
+  clientRoles.some(role =>
+    role.toLowerCase().includes("finance")
+  )
+) {
+  userRole = "FINANCE";
+}
+else if (
+  clientRoles.some(role =>
+    role.toLowerCase().includes("approver") ||
+    role.toLowerCase().includes("manager")
+  )
+) {
+  userRole = "MANAGER";
+}
+else if (
+  clientRoles.some(role =>
+    role.toLowerCase().includes("assessor")
+  ) 
+) {
+  console.log("Entered assessor")
+  userRole = "ASSESSOR";
+}
+
+localStorage.setItem("userRole", userRole);
+
+console.log("Resolved App Role:", userRole);
+      console.log("Entering navigation")
+      if (userRole === "CUSTOMER") {
+        navigate("/registration");
+      }
+      else if (userRole === "ASSESSOR") {
+        navigate("/workpool");
+      }
+      else if (userRole === "MANAGER") {
+        navigate("/workpool");
+      }
+      else if (userRole === "FINANCE") {
+        navigate("/workpool");
+      }
+      console.log("after navigate")
+
+    } catch (err) {
+      console.error("Login error:", err);
+      alert("Login failed. Please check credentials");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Box
@@ -84,7 +168,6 @@ const handleLogin = async () => {
         bgcolor: "#F6F9F8",
       }}
     >
-      {/* LEFT IMAGE */}
       <Box
         sx={{
           width: { xs: "100%", md: "45%" },
@@ -104,7 +187,6 @@ const handleLogin = async () => {
           }}
         />
 
-        {/* TEXT BELOW IMAGE */}
         <Box sx={{ px: { xs: 2, md: 5 }, py: 3, color: "#fff" }}>
           <Typography fontSize={{ xs: 16, md: 22 }} fontWeight={600} mb={1}>
             Reliable health coverage for you and your family
@@ -116,7 +198,6 @@ const handleLogin = async () => {
         </Box>
       </Box>
 
-      {/* RIGHT LOGIN */}
       <Box
         sx={{
           width: { xs: "100%", md: "55%" },
@@ -127,7 +208,6 @@ const handleLogin = async () => {
         }}
       >
         <Box sx={{ width: "100%", maxWidth: 420 }}>
-          {/* LOGO */}
           <Box textAlign="center" mb={4}>
             <Box component="img" src={aaseyaLogo} alt="aaseya" sx={{ height: 36 }} />
           </Box>
@@ -140,75 +220,45 @@ const handleLogin = async () => {
             Please enter your credentials to access your secure portal
           </Typography>
 
-          {/* USERNAME */}
           <Typography fontSize={13} mb={1}>Username</Typography>
-        <TextField
-  fullWidth
-  value={email}
-  onChange={(e) => setEmail(e.target.value)}
-  sx={{
-    mb: 3,
-    "& .MuiOutlinedInput-root": {
-      height: 52,
-      borderRadius: "999px",          // 👈 pill shape
-      backgroundColor: "#EEF5FF",     // 👈 XD light fill
-      "& fieldset": {
-        borderColor: "#C5C9CE",
-      },
-      "&:hover fieldset": {
-        borderColor: "#B5CBE3",
-      },
-      "&.Mui-focused fieldset": {
-        borderColor: "#5A9BA5",
-      },
-    },
-    "& .MuiOutlinedInput-input": {
-      padding: "14px 20px",
-      fontSize: 14,
-    },
-  }}
-/>
+          <TextField
+            fullWidth
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            sx={{
+              mb: 3,
+              "& .MuiOutlinedInput-root": {
+                height: 52,
+                borderRadius: "999px",
+                backgroundColor: "#EEF5FF",
+              },
+            }}
+          />
 
-
-          {/* PASSWORD */}
           <Typography fontSize={13} mb={1}>Password</Typography>
-        <TextField
-  fullWidth
-  type={showPassword ? "text" : "password"}
-  value={password}
-  onChange={(e) => setPassword(e.target.value)}
-  sx={{
-    mb: 2,
-    "& .MuiOutlinedInput-root": {
-      height: 52,
-      borderRadius: "999px",          // 👈 pill shape
-      backgroundColor: "#EEF5FF",
-      "& fieldset": {
-        borderColor: "#C5C9CE",
-      },
-      "&:hover fieldset": {
-        borderColor: "#B5CBE3",
-      },
-      "&.Mui-focused fieldset": {
-        borderColor: "#5A9BA5",
-      },
-    },
-    "& .MuiOutlinedInput-input": {
-      padding: "14px 20px",
-      fontSize: 14,
-    },
-  }}
-  InputProps={{
-    endAdornment: (
-      <InputAdornment position="end">
-        <IconButton onClick={() => setShowPassword(!showPassword)}>
-          {showPassword ? <VisibilityOff /> : <Visibility />}
-        </IconButton>
-      </InputAdornment>
-    ),
-  }}
-/>
-
+          <TextField
+            fullWidth
+            type={showPassword ? "text" : "password"}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            sx={{
+              mb: 2,
+              "& .MuiOutlinedInput-root": {
+                height: 52,
+                borderRadius: "999px",
+                backgroundColor: "#EEF5FF",
+              },
+            }}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={() => setShowPassword(!showPassword)}>
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
 
           <FormControlLabel
             control={
@@ -222,21 +272,21 @@ const handleLogin = async () => {
           />
 
           <Button
-            fullWidth
-            variant="contained"
-            disabled={loading}
-            onClick={handleLogin}
-            sx={{
-              bgcolor: "#5A9BA5",
-              color: "#fff",
-              borderRadius: 12,
-              py: 1.4,
-              mb: 2,
-              "&:hover": { bgcolor: "#4A8A94" },
-            }}
-          >
-            {loading ? "Logging in..." : "LOGIN"}
-          </Button>
+  fullWidth
+  variant="contained"
+  disabled={loading}
+  onClick={handleLogin}
+  sx={{
+    bgcolor: "#5A9BA5",
+    color: "#fff",   
+    borderRadius: 12,
+    py: 1.4,
+    mb: 2,
+    "&:hover": { bgcolor: "#4A8A94" },
+  }}
+>
+  {loading ? "Logging in..." : "LOGIN"}
+</Button>
 
           <Box textAlign="center">
             <Link sx={{ fontSize: 13, color: "#5A9BA5" }}>
@@ -250,3 +300,4 @@ const handleLogin = async () => {
 };
 
 export default Login;
+
