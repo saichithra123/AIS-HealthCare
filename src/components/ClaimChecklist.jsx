@@ -75,33 +75,40 @@ export default function ClaimChecklist() {
     );
   };
 
-  const handleSubmitChecklist = async () => {
-    try {
-      const response = await fetch(
-        `${baseUrl}/healthcare/checklist/${claimId}/submit`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(checklistItems),
-        }
-      );
+ const handleSubmitChecklist = async () => {
 
-      if (!response.ok) throw new Error("Submission failed");
+  const anyChecked = checklistItems.some(item => item.checked === true);
 
-      setOpenSnack(true);
+  if (!anyChecked) {
+    setOpenSnack(true);
+    return;
+  }
 
-      setTimeout(() => {
-        navigate("/workpool");
-      }, 1500);
+  try {
+    const response = await fetch(
+      `${baseUrl}/healthcare/checklist/${claimId}/submit`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(checklistItems),
+      }
+    );
 
-    } catch (error) {
-      console.error("Submit error:", error);
-    }
-  };
+    if (!response.ok) throw new Error("Submission failed");
 
+    setOpenSnack(true);
+
+    setTimeout(() => {
+      navigate("/workpool");
+    }, 1500);
+
+  } catch (error) {
+    console.error("Submit error:", error);
+  }
+};
  
 
   return (
@@ -225,19 +232,20 @@ export default function ClaimChecklist() {
           Cancel
         </Button>
 
-        <Button
-          variant="contained"
-          sx={{
-            borderRadius: "999px",
-            px: 4,
-            textTransform: "none",
-            backgroundColor: "#4C8B92",
-            color: "#fff",
-          }}
-          onClick={handleSubmitChecklist}
-        >
-          Submit
-        </Button>
+       <Button
+  variant="contained"
+  disabled={!checklistItems.some(item => item.checked)}
+  sx={{
+    borderRadius: "999px",
+    px: 4,
+    textTransform: "none",
+    backgroundColor: "#4C8B92",
+    color: "#fff",
+  }}
+  onClick={handleSubmitChecklist}
+>
+  Submit
+</Button>
       </Stack>
     </>
   )}
@@ -246,8 +254,11 @@ export default function ClaimChecklist() {
 
 <Snackbar
   open={openSnack}
-  autoHideDuration={3000}
+  autoHideDuration={8000}
   onClose={() => setOpenSnack(false)}
+    anchorOrigin={{ vertical: "top", horizontal: "center" }}
+   disableWindowBlurListener
+
 >
   <Alert severity="success" variant="filled">
     Case assigned to Claim Manager successfully
