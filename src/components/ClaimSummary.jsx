@@ -10,14 +10,16 @@ import {
   Button,
   Stack,
   Grid,
-  Snackbar,
-  Alert,
   CircularProgress,
+  Snackbar,
+  Alert
+
 } from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import aaseyaLogo from "../assets/Aaseyalogo.svg";
 import { Divider } from "@mui/material";
+
 
 export default function ClaimSummary() {
   const navigate = useNavigate();
@@ -155,106 +157,106 @@ export default function ClaimSummary() {
         </Typography>
 
         <Paper
-  sx={{
-    p: 4,
-    borderRadius: 3,
-    boxShadow: "0px 2px 6px rgba(0,0,0,0.08)",
-    mb: 4,
-    minHeight: 250,
-  }}
->
-  <Typography sx={{ fontSize: 18, fontWeight: 600, mb: 3 }}>
-    Claim Summary
-  </Typography>
+          sx={{
+            p: 4,
+            borderRadius: 3,
+            boxShadow: "0px 2px 6px rgba(0,0,0,0.08)",
+            mb: 4,
+            minHeight: 250,
+          }}
+        >
+          <Typography sx={{ fontSize: 18, fontWeight: 600, mb: 3 }}>
+            Claim Summary
+          </Typography>
 
-  {loading ? (
-    <Box sx={{ display: "flex", justifyContent: "center", py: 6 }}>
-      <CircularProgress />
-    </Box>
-  ) : error ? (
-    <Typography color="error">
-      Failed to load claim data
-    </Typography>
-  ) : (
-    <Box
-      sx={{
-        backgroundColor: "#EAF3F4",
-        borderRadius: 3,
-        p: 4,
-      }}
-    >
-      <Typography sx={{ fontWeight: 600, mb: 2 }}>
-        Claimant Information
-      </Typography>
+          {loading ? (
+            <Box sx={{ display: "flex", justifyContent: "center", py: 6 }}>
+              <CircularProgress />
+            </Box>
+          ) : error ? (
+            <Typography color="error">
+              Failed to load claim data
+            </Typography>
+          ) : (
+            <Box
+              sx={{
+                backgroundColor: "#EAF3F4",
+                borderRadius: 3,
+                p: 4,
+              }}
+            >
+              <Typography sx={{ fontWeight: 600, mb: 2 }}>
+                Claimant Information
+              </Typography>
 
-      <Grid container spacing={4} mb={3}>
-        <Grid item xs={3}>
-          <Label title="Full Name" value={claimSummary?.fullName} />
-        </Grid>
-        <Grid item xs={3}>
-          <Label title="Relationship" value={claimSummary?.insuredType} />
-        </Grid>
-        <Grid item xs={3}>
-          <Label title="Contact Number" value={claimSummary?.contactNumber} />
-        </Grid>
-        <Grid item xs={3}>
-          <Label title="Email" value={claimSummary?.email} />
-        </Grid>
-      </Grid>
+              <Grid container spacing={4} mb={3}>
+                <Grid item xs={3}>
+                  <Label title="Full Name" value={claimSummary?.fullName} />
+                </Grid>
+                <Grid item xs={3}>
+                  <Label title="Relationship" value={claimSummary?.insuredType} />
+                </Grid>
+                <Grid item xs={3}>
+                  <Label title="Contact Number" value={claimSummary?.contactNumber} />
+                </Grid>
+                <Grid item xs={3}>
+                  <Label title="Email" value={claimSummary?.email} />
+                </Grid>
+              </Grid>
 
-      <Box sx={{ borderBottom: "1px solid #D5E2E3", mb: 3 }} />
+              <Box sx={{ borderBottom: "1px solid #D5E2E3", mb: 3 }} />
 
-      <Typography sx={{ fontWeight: 600, mb: 2 }}>
-        Policy Information
-      </Typography>
+              <Typography sx={{ fontWeight: 600, mb: 2 }}>
+                Policy Information
+              </Typography>
 
-      <Grid container spacing={4} mb={3}>
-        <Grid item xs={3}>
-          <Label title="Policy Number" value={policyInformation?.policyNumber} />
-        </Grid>
-        <Grid item xs={3}>
-          <Label title="Policy Type" value={policyInformation?.policyType} />
-        </Grid>
-        <Grid item xs={3}>
-          <Label title="Coverage Type" value={policyInformation?.coverageType} />
-        </Grid>
-        <Grid item xs={3}>
-          <Label
-            title="Base Sum Insured"
-            value={
-              policyInformation?.baseSumInsured
-                ? `$${Number(policyInformation.baseSumInsured).toLocaleString()}`
-                : "-"
-            }
-          />
-        </Grid>
-      </Grid>
+              <Grid container spacing={4} mb={3}>
+                <Grid item xs={3}>
+                  <Label title="Policy Number" value={policyInformation?.policyNumber} />
+                </Grid>
+                <Grid item xs={3}>
+                  <Label title="Policy Type" value={policyInformation?.policyType} />
+                </Grid>
+                <Grid item xs={3}>
+                  <Label title="Coverage Type" value={policyInformation?.coverageType} />
+                </Grid>
+                <Grid item xs={3}>
+                  <Label
+                    title="Base Sum Insured"
+                    value={
+                      policyInformation?.baseSumInsured
+                        ? `$${Number(policyInformation.baseSumInsured).toLocaleString()}`
+                        : "-"
+                    }
+                  />
+                </Grid>
+              </Grid>
 
-      <Box sx={{ borderBottom: "1px solid #D5E2E3", mb: 3 }} />
+              <Box sx={{ borderBottom: "1px solid #D5E2E3", mb: 3 }} />
 
-      <Typography sx={{ fontWeight: 600, mb: 2 }}>
-        Incident Details
-      </Typography>
+              <Typography sx={{ fontWeight: 600, mb: 2 }}>
+                Incident Details
+              </Typography>
 
-      <Grid container spacing={4}>
-        <Grid item xs={3}>
-          <Label title="Date of Service" value={incidentDetails?.incidentDate} />
-        </Grid>
-        <Grid item xs={3}>
-          <Label title="Hospital Name" value={incidentDetails?.hospitalName} />
-        </Grid>
-        <Grid item xs={3}>
-          <Label title="Doctor Name" value={incidentDetails?.doctorName} />
-        </Grid>
-        <Grid item xs={3}>
-          <Label title="Medical Condition" value={incidentDetails?.medicalCondition} />
-        </Grid>
-      </Grid>
-    </Box>
-  )}
-</Paper>
+              <Grid container spacing={4}>
+                <Grid item xs={3}>
+                  <Label title="Date of Service" value={incidentDetails?.incidentDate} />
+                </Grid>
+                <Grid item xs={3}>
+                  <Label title="Hospital Name" value={incidentDetails?.hospitalName} />
+                </Grid>
+                <Grid item xs={3}>
+                  <Label title="Doctor Name" value={incidentDetails?.doctorName} />
+                </Grid>
+                <Grid item xs={3}>
+                  <Label title="Medical Condition" value={incidentDetails?.medicalCondition} />
+                </Grid>
+              </Grid>
+            </Box>
+          )}
+        </Paper>
 
-        <Paper sx={{ p: 3,  borderRadius: 3 }}>
+        <Paper sx={{ p: 3, borderRadius: 3 }}>
           <Typography sx={{ fontSize: 16, fontWeight: 600, mb: 2 }}>
             Manager Decision
           </Typography>
@@ -301,7 +303,7 @@ export default function ClaimSummary() {
                 px: 4,
                 textTransform: "none",
                 backgroundColor: "#4A8F97",
-                color:"#fff",
+                color: "#fff",
                 "&:hover": { backgroundColor: "#3B7D84" },
               }}
             >
@@ -311,11 +313,17 @@ export default function ClaimSummary() {
         </Paper>
       </Box>
 
-      <Snackbar open={snackOpen} autoHideDuration={1500}>
-        <Alert severity="success" variant="filled">
-          Decision submitted successfully
-        </Alert>
-      </Snackbar>
+     <Snackbar
+  open={snackOpen}
+  autoHideDuration={10000}
+  onClose={() => setSnackOpen(false)}
+  anchorOrigin={{ vertical: "top", horizontal: "center" }}
+  disableWindowBlurListener
+>
+  <Alert severity="success" variant="filled">
+    Case assigned to Finance Manager successfully
+  </Alert>
+</Snackbar>
     </Box>
   );
 }

@@ -32,20 +32,34 @@ export default function UploadDocuments() {
 const [submitting, setSubmitting] = useState(false);
 const [error, setError] = useState("");
 const [success, setSuccess] = useState(false);
+const [docMessage, setDocMessage] = useState("");
+const [docError, setDocError] = useState(false);
+const [caseMessage, setCaseMessage] = useState("");
 
   const handleFileSelect = (sectionId, file) => {
-    setFiles((prev) => ({ ...prev, [sectionId]: file }));
+  setError("");
+  setDocMessage("");
+  setFiles((prev) => ({ ...prev, [sectionId]: file }));
+};
+
+ const handleBrowseClick = (sectionId) => {
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = "application/pdf";
+
+  input.onchange = (e) => {
+    const file = e.target.files[0];
+
+    if (file && file.type !== "application/pdf") {
+      setError("Only PDF files are allowed");
+      return;
+    }
+
+    if (file) handleFileSelect(sectionId, file);
   };
 
-  const handleBrowseClick = (sectionId) => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.onchange = (e) => {
-      const file = e.target.files[0];
-      if (file) handleFileSelect(sectionId, file);
-    };
-    input.click();
-  };
+  input.click();
+};
 
   const handleDragOver = (e) => e.preventDefault();
   const allDocumentsUploaded = Object.values(files).every(
@@ -53,11 +67,18 @@ const [success, setSuccess] = useState(false);
 );
 
 
-  const handleDrop = (e, sectionId) => {
-    e.preventDefault();
-    const file = e.dataTransfer.files[0];
-    if (file) handleFileSelect(sectionId, file);
-  };
+ const handleDrop = (e, sectionId) => {
+  e.preventDefault();
+
+  const file = e.dataTransfer.files[0];
+
+  if (file && file.type !== "application/pdf") {
+    setError("Only PDF files are allowed");
+    return;
+  }
+
+  if (file) handleFileSelect(sectionId, file);
+};
 
   const handleLogout = () => {
   localStorage.removeItem("access_token");
@@ -107,21 +128,17 @@ const handleSubmit = async () => {
 
     const claimId = result.processInstanceKey;
 
-    // const assignResponse = await fetch(
-    //   `${baseUrl}/healthcare/assignToClaimAssessor?claimId=${claimId}&claimAssessorId=${username}`,
-    //   {
-    //     method: "POST",
-    //     headers: {
-    //       Authorization: `Bearer ${token}`,
-    //     },
-    //   }
-    // );
+if (result.status === "success") {
+  setDocMessage("Documents got verified successfully");
+  setDocError(false);
 
-    if (!assignResponse.ok) {
-      throw new Error("Assignment failed");
-    }
-
-setSuccess(true);
+  setCaseMessage(result.caseMessage);
+  setSuccess(true);
+} else {
+  setDocMessage("Kindly upload proper documents");
+  setDocError(true);
+}
+// setSuccess(true);
 
   } catch (err) {
     console.error(err);
@@ -296,6 +313,11 @@ setSuccess(true);
                 </Stack>
               </Box>
             ))}
+            {error && (
+  <Typography color="error" mt={2}>
+    {error}
+  </Typography>
+)}
           </Stack>
 
           <Stack direction="row" spacing={2} justifyContent="flex-end" mt={4}>
@@ -329,6 +351,17 @@ setSuccess(true);
           </Stack>
         </Paper>
               </Box>
+              {docMessage && (
+  <Box sx={{ maxWidth: 1200, mx: "auto", mt: 2 }}>
+    <Typography
+      textAlign="center"
+      fontWeight={600}
+      color={docError ? "error" : "success.main"}
+    >
+      {docMessage}
+    </Typography>
+  </Box>
+)}
 
       {submitting && (
         <Box
@@ -346,17 +379,18 @@ setSuccess(true);
           }}
         >
           <CircularProgress size={60} sx={{ color: "#fff" }} />
+      
         </Box>
       )}
 <Snackbar
   open={success}
-  autoHideDuration={3000}
+  autoHideDuration={8000}
   onClose={() => setSuccess(false)}
-  anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+  anchorOrigin={{ vertical: "top", horizontal: "center" }}
+   disableWindowBlurListener
 >
-  <Alert severity="success" sx={{ width: "100%" }}>
-    Submitted successfully. Case routed to Claim Assessor.
-  </Alert>
+<Alert severity="success" sx={{ minWidth: 420 }}>{caseMessage} 
+</Alert>
 </Snackbar>
     </Box>
   );
