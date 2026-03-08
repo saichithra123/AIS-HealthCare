@@ -1,4 +1,4 @@
-- name: Deploy on QA server
+- name: Deploy on QA Server
   run: |
     set -e
 
