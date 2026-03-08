@@ -1,35 +1,26 @@
-name: Deploy Frontend to QA
+- name: Deploy on QA server
+  run: |
+    set -e
 
-on:
-  push:
-    branches:
-      - feature/Healthcare
+    cd /home/karthik
 
-jobs:
-  deploy:
-    runs-on: self-hosted
+    if [ ! -d "AIS-HealthCare" ]; then
+      git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/saichithra123/AIS-HealthCare.git
+    fi
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    cd AIS-HealthCare
+    git fetch origin
+    git checkout ${{ github.ref_name }} || git checkout -b ${{ github.ref_name }} origin/${{ github.ref_name }}
+    git pull origin ${{ github.ref_name }}
 
-      - name: Deploy on QA server
-        run: |
-          set -e
+    # Stop old container if exists
+    docker stop healthcare-frontend || true
+    docker rm healthcare-frontend || true
 
-          cd /home/karthik
+    # Stop anything using port 3000
+    docker ps -q --filter "publish=3000" | xargs -r docker stop
+    docker ps -a -q --filter "publish=3000" | xargs -r docker rm
 
-          if [ ! -d "AIS-HealthCare" ]; then
-            git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/saichithra123/AIS-HealthCare.git
-          fi
-
-          cd AIS-HealthCare
-          git fetch origin
-          git checkout ${{ github.ref_name }} || git checkout -b ${{ github.ref_name }} origin/${{ github.ref_name }}
-          git pull origin ${{ github.ref_name }}
-
-          docker stop healthcare-frontend || true
-          docker rm healthcare-frontend || true
-
-          docker build -t healthcare-frontend .
-          docker run -d --name healthcare-frontend -p 3000:80 healthcare-frontend
+    # Build and run new container
+    docker build -t healthcare-frontend .
+    docker run -d --name healthcare-frontend -p 3000:80 healthcare-frontend
