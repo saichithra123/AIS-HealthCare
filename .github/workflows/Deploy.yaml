@@ -33,10 +33,10 @@ jobs:
           docker stop healthcare-frontend || true
           docker rm healthcare-frontend || true
 
-          # Stop anything using port 3000
-          docker ps -q --filter "publish=3000" | xargs -r docker stop
-          docker ps -a -q --filter "publish=3000" | xargs -r docker rm
+          # Stop anything using port 3001
+          docker ps -q --filter "publish=3001" | xargs -r docker stop
+          docker ps -a -q --filter "publish=3001" | xargs -r docker rm
 
           # Build and run new container
           docker build -t healthcare-frontend .
-          docker run -d --name healthcare-frontend -p 3000:80 healthcare-frontend
+          docker run -d --name healthcare-frontend -p 3001:80 healthcare-frontend
