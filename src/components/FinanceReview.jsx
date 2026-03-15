@@ -10,6 +10,8 @@ import {
   FormControlLabel,
   TextField,
   CircularProgress,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import aaseyaLogo from "../assets/Aaseyalogo.svg";
@@ -26,6 +28,7 @@ export default function FinanceReview() {
 
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [openSnack, setOpenSnack] = useState(false);
 
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
   const token = localStorage.getItem("access_token");
@@ -35,7 +38,7 @@ export default function FinanceReview() {
     navigate("/ais/login");
   };
 
-  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -61,7 +64,7 @@ export default function FinanceReview() {
     fetchData();
   }, [claimId]);
 
-  
+
   const handleSubmit = async () => {
     if (!decision) {
       alert("Please select Approve or Reject");
@@ -83,7 +86,11 @@ export default function FinanceReview() {
 
       if (!response.ok) throw new Error();
 
-      navigate("/ais/workpool");
+      setOpenSnack(true);
+
+      setTimeout(() => {
+        navigate("/workpool");
+      }, 1500);
     } catch (err) {
       alert("Submission failed");
     } finally {
@@ -96,33 +103,33 @@ export default function FinanceReview() {
 
   return (
     <Box sx={{ minHeight: "100vh", bgcolor: "#F6F9F8" }}>
-      
-      <Box
-  sx={{
-    bgcolor: "#4C8B92",
-    px: 4,
-    py: 2,
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-  }}
->
-  <Box component="img" src={aaseyaLogo} sx={{ height: 32 }} />
 
-  <Box
-    onClick={handleLogout}
-    sx={{
-      display: "flex",
-      alignItems: "center",
-      gap: 1,
-      cursor: "pointer",
-      color: "#fff",
-    }}
-  >
-    <LogoutIcon fontSize="small" />
-    <Typography fontSize={14}>Logout</Typography>
-  </Box>
-</Box>
+      <Box
+        sx={{
+          bgcolor: "#4C8B92",
+          px: 4,
+          py: 2,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Box component="img" src={aaseyaLogo} sx={{ height: 32 }} />
+
+        <Box
+          onClick={handleLogout}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+            cursor: "pointer",
+            color: "#fff",
+          }}
+        >
+          <LogoutIcon fontSize="small" />
+          <Typography fontSize={14}>Logout</Typography>
+        </Box>
+      </Box>
 
       <Box sx={{ maxWidth: "1100px", mx: "auto", px: 4, py: 6 }}>
         {/* BACK */}
@@ -138,7 +145,7 @@ export default function FinanceReview() {
           Financial Cost & Policy Review - {claimId}
         </Typography>
 
-       
+
         <Paper sx={{ p: 3, mb: 4, borderRadius: 3 }}>
           <Typography fontWeight={600} mb={3}>
             Financial Overview
@@ -186,7 +193,7 @@ export default function FinanceReview() {
           )}
         </Paper>
 
-       
+
         <Paper sx={{ p: 3, mb: 4, borderRadius: 3 }}>
           <Typography fontWeight={600} mb={3}>
             Claim Summary
@@ -255,7 +262,7 @@ export default function FinanceReview() {
                 borderRadius: "999px",
                 px: 4,
                 bgcolor: "#4C8B92",
-                color:"#fff",
+                color: "#fff",
                 "&:hover": { bgcolor: "#3B7D84" },
               }}
             >
@@ -264,6 +271,18 @@ export default function FinanceReview() {
           </Stack>
         </Paper>
       </Box>
+
+      <Snackbar
+        open={openSnack}
+        autoHideDuration={8000}
+        onClose={() => setOpenSnack(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        disableWindowBlurListener
+      >
+        <Alert severity="success" variant="filled">
+          Finance decision submitted successfully
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }
