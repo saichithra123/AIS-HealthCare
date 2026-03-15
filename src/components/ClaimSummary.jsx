@@ -95,7 +95,7 @@ export default function ClaimSummary() {
       setSnackOpen(true);
 
       setTimeout(() => {
-        navigate("/ais/workpool");
+        navigate("/workpool");
       }, 1500);
     } catch (err) {
       console.error("Submit error:", err);
@@ -313,17 +313,17 @@ export default function ClaimSummary() {
         </Paper>
       </Box>
 
-     <Snackbar
-  open={snackOpen}
-  autoHideDuration={10000}
-  onClose={() => setSnackOpen(false)}
-  anchorOrigin={{ vertical: "top", horizontal: "center" }}
-  disableWindowBlurListener
->
-  <Alert severity="success" variant="filled">
-    Case assigned to Finance Manager successfully
-  </Alert>
-</Snackbar>
+      <Snackbar
+        open={snackOpen}
+        autoHideDuration={10000}
+        onClose={() => setSnackOpen(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        disableWindowBlurListener
+      >
+        <Alert severity="success" variant="filled">
+          Case assigned to Finance Manager successfully
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }
