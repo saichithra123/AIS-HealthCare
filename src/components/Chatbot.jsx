@@ -573,130 +573,195 @@ export default function Chatbot({ onClose, conversationId: externalConversationI
             >
               {/* ---- CLAIM STATUS CARD ---- */}
               {msg._claimCard ? (
-                <Paper
-                  elevation={2}
-                  sx={{ p: 2.5, maxWidth: "90%", borderRadius: 2 }}
-                >
-                  <Stack direction="row" justifyContent="space-between" alignItems="center" mb={1.5}>
-                    <Typography fontWeight={600} color="#4F8787">
-                      Claim Status
-                    </Typography>
+                <Box sx={{ width: "100%" }}>
+                  <Paper
+                    elevation={3}
+                    sx={{ borderRadius: 3, overflow: "hidden", width: "100%" }}
+                  >
+                    {/* Card Header Banner */}
                     <Box
                       sx={{
-                        px: 1.5, py: 0.3, borderRadius: 10, fontSize: 12, fontWeight: 600,
-                        backgroundColor:
-                          msg._claimCard.status === "Approved" ? "#E6F4EA"
-                            : msg._claimCard.status === "Rejected" ? "#FDECEA"
-                              : "#FFF3E0",
-                        color:
-                          msg._claimCard.status === "Approved" ? "#2E7D32"
-                            : msg._claimCard.status === "Rejected" ? "#D32F2F"
-                              : "#E65100",
+                        backgroundColor: "#4F8787",
+                        px: 3,
+                        py: 2,
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
                       }}
                     >
-                      {msg._claimCard.status || "Unknown"}
-                    </Box>
-                  </Stack>
-
-                  <Stack spacing={0.8}>
-                    {msg._claimCard.claimId && (
-                      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                        <Typography fontSize={13} color="#6B7280">Claim ID</Typography>
-                        <Typography fontSize={13} fontWeight={600}>{msg._claimCard.claimId}</Typography>
-                      </Box>
-                    )}
-                    {msg._claimCard.stage && (
-                      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                        <Typography fontSize={13} color="#6B7280">Stage</Typography>
-                        <Typography fontSize={13} fontWeight={600}>{msg._claimCard.stage}</Typography>
-                      </Box>
-                    )}
-                    {msg._claimCard.treatmentType && (
-                      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                        <Typography fontSize={13} color="#6B7280">Treatment Type</Typography>
-                        <Typography fontSize={13} fontWeight={600}>{msg._claimCard.treatmentType}</Typography>
-                      </Box>
-                    )}
-                    {msg._claimCard.hospitalName && (
-                      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                        <Typography fontSize={13} color="#6B7280">Hospital</Typography>
-                        <Typography fontSize={13} fontWeight={600}>{msg._claimCard.hospitalName}</Typography>
-                      </Box>
-                    )}
-                    {msg._claimCard.diagnosisCode && (
-                      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                        <Typography fontSize={13} color="#6B7280">Diagnosis Code</Typography>
-                        <Typography fontSize={13} fontWeight={600}>{msg._claimCard.diagnosisCode}</Typography>
-                      </Box>
-                    )}
-                    {msg._claimCard.approvedAmount && (
-                      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                        <Typography fontSize={13} color="#6B7280">Approved Amount</Typography>
-                        <Typography fontSize={13} fontWeight={600}>{msg._claimCard.approvedAmount}</Typography>
-                      </Box>
-                    )}
-                    {msg._claimCard.validityPeriod && (
-                      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                        <Typography fontSize={13} color="#6B7280">Validity</Typography>
-                        <Typography fontSize={13} fontWeight={600}>{msg._claimCard.validityPeriod}</Typography>
-                      </Box>
-                    )}
-                    {msg._claimCard.createdAt && (
-                      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                        <Typography fontSize={13} color="#6B7280">Created</Typography>
-                        <Typography fontSize={13} fontWeight={600}>
-                          {new Date(msg._claimCard.createdAt).toLocaleDateString()}
-                        </Typography>
-                      </Box>
-                    )}
-                  </Stack>
-
-                  {/* Person info */}
-                  {msg._claimCard.person && (
-                    <Box sx={{ mt: 1.5, pt: 1.5, borderTop: "1px solid #E5E7EB" }}>
-                      <Typography fontSize={12} fontWeight={600} color="#4F8787" mb={0.5}>
-                        Patient
+                      <Typography fontWeight={700} fontSize={17} color="#fff">
+                        🗂️ Claim Status
                       </Typography>
-                      <Stack spacing={0.5}>
-                        {msg._claimCard.person.name && (
-                          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                            <Typography fontSize={12} color="#6B7280">Name</Typography>
-                            <Typography fontSize={12} fontWeight={600}>{msg._claimCard.person.name}</Typography>
-                          </Box>
-                        )}
-                        {msg._claimCard.person.ssn && (
-                          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                            <Typography fontSize={12} color="#6B7280">SSN</Typography>
-                            <Typography fontSize={12} fontWeight={600}>{msg._claimCard.person.ssn}</Typography>
-                          </Box>
-                        )}
-                      </Stack>
+                      <Box
+                        sx={{
+                          px: 2,
+                          py: 0.5,
+                          borderRadius: 10,
+                          fontSize: 14,
+                          fontWeight: 700,
+                          backgroundColor:
+                            msg._claimCard.status === "Approved" ? "#E6F4EA"
+                              : msg._claimCard.status === "Rejected" ? "#FDECEA"
+                                : "#FFF3E0",
+                          color:
+                            msg._claimCard.status === "Approved" ? "#2E7D32"
+                              : msg._claimCard.status === "Rejected" ? "#D32F2F"
+                                : "#E65100",
+                        }}
+                      >
+                        {msg._claimCard.status || "Under Review"}
+                      </Box>
                     </Box>
-                  )}
 
-                  {/* Policy info */}
-                  {msg._claimCard.policy && (
-                    <Box sx={{ mt: 1, pt: 1, borderTop: "1px solid #E5E7EB" }}>
-                      <Typography fontSize={12} fontWeight={600} color="#4F8787" mb={0.5}>
-                        Policy
-                      </Typography>
-                      <Stack spacing={0.5}>
-                        {msg._claimCard.policy.policyNumber && (
-                          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                            <Typography fontSize={12} color="#6B7280">Policy Number</Typography>
-                            <Typography fontSize={12} fontWeight={600}>{msg._claimCard.policy.policyNumber}</Typography>
-                          </Box>
-                        )}
-                        {msg._claimCard.policy.sumInsured && (
-                          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                            <Typography fontSize={12} color="#6B7280">Sum Insured</Typography>
-                            <Typography fontSize={12} fontWeight={600}>{msg._claimCard.policy.sumInsured}</Typography>
-                          </Box>
-                        )}
+                    {/* Main Details */}
+                    <Box sx={{ p: 3 }}>
+                      <Stack
+                        direction="row"
+                        flexWrap="wrap"
+                        spacing={0}
+                        sx={{ gap: 2, mb: 2 }}
+                      >
+                        {[
+                          { label: "Claim ID", value: msg._claimCard.claimId },
+                          { label: "Stage", value: msg._claimCard.stage },
+                          { label: "Treatment Type", value: msg._claimCard.treatmentType },
+                          { label: "Hospital", value: msg._claimCard.hospitalName },
+                          { label: "Diagnosis Code", value: msg._claimCard.diagnosisCode },
+                          { label: "Approved Amount", value: msg._claimCard.approvedAmount },
+                          { label: "Validity Period", value: msg._claimCard.validityPeriod },
+                          {
+                            label: "Created",
+                            value: msg._claimCard.createdAt
+                              ? new Date(msg._claimCard.createdAt).toLocaleDateString("en-IN", {
+                                day: "2-digit", month: "short", year: "numeric",
+                              })
+                              : null,
+                          },
+                        ]
+                          .filter((f) => f.value)
+                          .map((field) => (
+                            <Box
+                              key={field.label}
+                              sx={{
+                                flex: "1 1 calc(50% - 8px)",
+                                backgroundColor: "#F0F9F9",
+                                borderRadius: 2,
+                                px: 2,
+                                py: 1.5,
+                              }}
+                            >
+                              <Typography fontSize={12} color="#6B7280" fontWeight={500} mb={0.3}>
+                                {field.label}
+                              </Typography>
+                              <Typography fontSize={15} fontWeight={700} color="#1A3C3E">
+                                {field.value}
+                              </Typography>
+                            </Box>
+                          ))}
                       </Stack>
+
+                      {/* Patient Section */}
+                      {msg._claimCard.person && (
+                        <Box sx={{ mt: 2 }}>
+                          <Typography
+                            fontSize={13}
+                            fontWeight={700}
+                            color="#4F8787"
+                            textTransform="uppercase"
+                            letterSpacing={0.8}
+                            mb={1}
+                          >
+                            👤 Patient
+                          </Typography>
+                          <Stack direction="row" spacing={2}>
+                            {msg._claimCard.person.name && (
+                              <Box
+                                sx={{
+                                  flex: 1,
+                                  backgroundColor: "#F0F9F9",
+                                  borderRadius: 2,
+                                  px: 2,
+                                  py: 1.5,
+                                }}
+                              >
+                                <Typography fontSize={12} color="#6B7280" mb={0.3}>Name</Typography>
+                                <Typography fontSize={15} fontWeight={700} color="#1A3C3E">
+                                  {msg._claimCard.person.name}
+                                </Typography>
+                              </Box>
+                            )}
+                            {msg._claimCard.person.ssn && (
+                              <Box
+                                sx={{
+                                  flex: 1,
+                                  backgroundColor: "#F0F9F9",
+                                  borderRadius: 2,
+                                  px: 2,
+                                  py: 1.5,
+                                }}
+                              >
+                                <Typography fontSize={12} color="#6B7280" mb={0.3}>SSN</Typography>
+                                <Typography fontSize={15} fontWeight={700} color="#1A3C3E">
+                                  {msg._claimCard.person.ssn}
+                                </Typography>
+                              </Box>
+                            )}
+                          </Stack>
+                        </Box>
+                      )}
+
+                      {/* Policy Section */}
+                      {msg._claimCard.policy && (
+                        <Box sx={{ mt: 2 }}>
+                          <Typography
+                            fontSize={13}
+                            fontWeight={700}
+                            color="#4F8787"
+                            textTransform="uppercase"
+                            letterSpacing={0.8}
+                            mb={1}
+                          >
+                            📋 Policy
+                          </Typography>
+                          <Stack direction="row" spacing={2}>
+                            {msg._claimCard.policy.policyNumber && (
+                              <Box
+                                sx={{
+                                  flex: 1,
+                                  backgroundColor: "#F0F9F9",
+                                  borderRadius: 2,
+                                  px: 2,
+                                  py: 1.5,
+                                }}
+                              >
+                                <Typography fontSize={12} color="#6B7280" mb={0.3}>Policy Number</Typography>
+                                <Typography fontSize={15} fontWeight={700} color="#1A3C3E">
+                                  {msg._claimCard.policy.policyNumber}
+                                </Typography>
+                              </Box>
+                            )}
+                            {msg._claimCard.policy.sumInsured && (
+                              <Box
+                                sx={{
+                                  flex: 1,
+                                  backgroundColor: "#F0F9F9",
+                                  borderRadius: 2,
+                                  px: 2,
+                                  py: 1.5,
+                                }}
+                              >
+                                <Typography fontSize={12} color="#6B7280" mb={0.3}>Sum Insured</Typography>
+                                <Typography fontSize={15} fontWeight={700} color="#1A3C3E">
+                                  {msg._claimCard.policy.sumInsured}
+                                </Typography>
+                              </Box>
+                            )}
+                          </Stack>
+                        </Box>
+                      )}
                     </Box>
-                  )}
-                </Paper>
+                  </Paper>
+                </Box>
               ) : (
                 <Paper
                   elevation={1}
