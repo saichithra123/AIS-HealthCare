@@ -102,7 +102,7 @@ export default function WebPortal() {
               { label: "Services", path: null },
               { label: "Claims", path: null },
               { label: "Contacts", path: null },
-              { label: "Admin", path: "/login" },
+              { label: "Admin Login", path: "/login" },
             ].map(({ label, path }) => (
               <Typography
                 key={label}

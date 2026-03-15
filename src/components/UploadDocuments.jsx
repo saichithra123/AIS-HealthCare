@@ -367,7 +367,7 @@ export default function UploadDocuments() {
             <Button
               variant="contained"
               fullWidth
-              onClick={() => navigate("/registration")}
+              onClick={() => navigate("/")}
               sx={{
                 backgroundColor: "#4C8B92",
                 color: "#fff",

@@ -219,10 +219,10 @@ export default function Chatbot({ onClose, conversationId: externalConversationI
         prev.map((m) =>
           m._typing === typingIdx
             ? {
-                type: "bot",
-                text: replyData.text || "Processing your request...",
-                ...replyData,
-              }
+              type: "bot",
+              text: replyData.text || "Processing your request...",
+              ...replyData,
+            }
             : m
         )
       );
@@ -346,10 +346,10 @@ export default function Chatbot({ onClose, conversationId: externalConversationI
         prev.map((m) =>
           m._typing === typingIdx
             ? {
-                type: "bot",
-                text: replyData.text || "Documents received. Processing...",
-                ...replyData,
-              }
+              type: "bot",
+              text: replyData.text || "Documents received. Processing...",
+              ...replyData,
+            }
             : m
         )
       );
@@ -416,11 +416,11 @@ export default function Chatbot({ onClose, conversationId: externalConversationI
           prev.map((m) =>
             m._typing === typingIdx
               ? {
-                  type: "bot",
-                  text: data.errorCode === "CLAIM_NOT_FOUND"
-                    ? "No claim found with that ID. Please check and try again."
-                    : `Error: ${data.errorMessage || "Something went wrong."}`,
-                }
+                type: "bot",
+                text: data.errorCode === "CLAIM_NOT_FOUND"
+                  ? "No claim found with that ID. Please check and try again."
+                  : `Error: ${data.errorMessage || "Something went wrong."}`,
+              }
               : m
           )
         );
@@ -468,32 +468,36 @@ export default function Chatbot({ onClose, conversationId: externalConversationI
           right: 40,
           top: "50%",
           transform: "translateY(-50%)",
-          width: 460,
-          height: 360,
-          maxHeight: "85vh",
-          borderRadius: 3,
+          width: 720,
+          height: 600,
+          maxHeight: "90vh",
+          borderRadius: 4,
           display: "flex",
           flexDirection: "column",
           zIndex: 2100,
+          overflow: "hidden",
         }}
       >
-        {/* HEADER */}
         <Box
           sx={{
             backgroundColor: "#4F8787",
             color: "#fff",
-            px: 2,
-            py: 1.5,
+            px: 3,
+            py: 2,
             display: "flex",
             justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
-          <Stack direction="row" spacing={1}>
-            <Box component="img" src={chatbotIcon} sx={{ width: 24 }} />
-            <Typography fontWeight={600}>Aaseya AI</Typography>
+          <Stack direction="row" spacing={1.5} alignItems="center">
+            <Box component="img" src={chatbotIcon} sx={{ width: 32 }} />
+            <Box>
+              <Typography fontWeight={700} fontSize={17}>Aaseya AI Assistant</Typography>
+              <Typography fontSize={12} sx={{ opacity: 0.85 }}>Online · Healthcare Support</Typography>
+            </Box>
           </Stack>
-          <IconButton onClick={onClose}>
-            <CloseIcon sx={{ color: "#fff" }} />
+          <IconButton onClick={onClose} sx={{ color: "#fff" }}>
+            <CloseIcon />
           </IconButton>
         </Box>
 
@@ -510,37 +514,49 @@ export default function Chatbot({ onClose, conversationId: externalConversationI
           }}
         >
           {stage === "WELCOME" && (
-            <Paper sx={{ p: 3, borderRadius: 3, boxShadow: 2 }}>
-              <Typography fontWeight={600}>
-                Hi! I can help you start a pre-claim approval or check an
-                existing request.
+            <Paper sx={{ p: 4, borderRadius: 3, boxShadow: 2, maxWidth: 480, mx: "auto", mt: 2 }}>
+              <Typography fontWeight={700} fontSize={17} mb={0.5}>
+                👋 Hi! Welcome to Aaseya AI
+              </Typography>
+              <Typography fontSize={14} color="text.secondary" mb={3}>
+                I can help you start a pre-claim approval or check an existing request.
               </Typography>
 
-              <Stack spacing={2} mt={3}>
+              <Stack spacing={2} mt={1}>
                 <Button
                   fullWidth
                   variant="contained"
+                  size="large"
                   sx={{
                     backgroundColor: "#4F8787",
                     borderRadius: "999px",
                     color: "#fff",
+                    py: 1.5,
+                    fontSize: 15,
+                    fontWeight: 600,
+                    textTransform: "none",
                   }}
                   onClick={startPreClaim}
                 >
-                  Initiate New Pre-Claim
+                  🚀 Initiate New Pre-Claim
                 </Button>
 
                 <Button
                   fullWidth
                   variant="outlined"
+                  size="large"
                   sx={{
                     borderColor: "#4F8787",
                     color: "#4F8787",
                     borderRadius: "999px",
+                    py: 1.5,
+                    fontSize: 15,
+                    fontWeight: 600,
+                    textTransform: "none",
                   }}
                   onClick={startExistingPreClaim}
                 >
-                  Check Existing Pre-Claim Status
+                  🔍 Check Existing Pre-Claim Status
                 </Button>
               </Stack>
             </Paper>
@@ -570,12 +586,12 @@ export default function Chatbot({ onClose, conversationId: externalConversationI
                         px: 1.5, py: 0.3, borderRadius: 10, fontSize: 12, fontWeight: 600,
                         backgroundColor:
                           msg._claimCard.status === "Approved" ? "#E6F4EA"
-                          : msg._claimCard.status === "Rejected" ? "#FDECEA"
-                          : "#FFF3E0",
+                            : msg._claimCard.status === "Rejected" ? "#FDECEA"
+                              : "#FFF3E0",
                         color:
                           msg._claimCard.status === "Approved" ? "#2E7D32"
-                          : msg._claimCard.status === "Rejected" ? "#D32F2F"
-                          : "#E65100",
+                            : msg._claimCard.status === "Rejected" ? "#D32F2F"
+                              : "#E65100",
                       }}
                     >
                       {msg._claimCard.status || "Unknown"}
@@ -682,40 +698,40 @@ export default function Chatbot({ onClose, conversationId: externalConversationI
                   )}
                 </Paper>
               ) : (
-              <Paper
-                elevation={1}
-                sx={{
-                  p: 1.5,
-                  maxWidth: "80%",
-                  borderRadius: 2,
-                  backgroundColor:
-                    msg.type === "user" ? "#4F8787" : "#F5F5F5",
-                  color: msg.type === "user" ? "#fff" : "#333",
-                  ...(msg._typing && {
-                    "@keyframes pulse": {
-                      "0%, 100%": { opacity: 1 },
-                      "50%": { opacity: 0.5 },
-                    },
-                    animation: "pulse 1.5s ease-in-out infinite",
-                  }),
-                }}
-              >
-                {msg._typing ? (
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <CircularProgress size={16} sx={{ color: "#4F8787" }} />
-                    <Typography fontSize={14} sx={{ color: "#555" }}>
-                      Processing your request...
+                <Paper
+                  elevation={1}
+                  sx={{
+                    p: 2,
+                    maxWidth: "80%",
+                    borderRadius: 2.5,
+                    backgroundColor:
+                      msg.type === "user" ? "#4F8787" : "#F5F5F5",
+                    color: msg.type === "user" ? "#fff" : "#333",
+                    ...(msg._typing && {
+                      "@keyframes pulse": {
+                        "0%, 100%": { opacity: 1 },
+                        "50%": { opacity: 0.5 },
+                      },
+                      animation: "pulse 1.5s ease-in-out infinite",
+                    }),
+                  }}
+                >
+                  {msg._typing ? (
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                      <CircularProgress size={18} sx={{ color: "#4F8787" }} />
+                      <Typography fontSize={15} sx={{ color: "#555" }}>
+                        Processing your request...
+                      </Typography>
+                    </Box>
+                  ) : (
+                    <Typography
+                      fontSize={15}
+                      sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word", lineHeight: 1.6 }}
+                    >
+                      {msg.text || ""}
                     </Typography>
-                  </Box>
-                ) : (
-                  <Typography
-                    fontSize={14}
-                    sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}
-                  >
-                    {msg.text || ""}
-                  </Typography>
-                )}
-              </Paper>
+                  )}
+                </Paper>
               )}
             </Box>
           ))}
@@ -868,22 +884,26 @@ export default function Chatbot({ onClose, conversationId: externalConversationI
             </Typography>
           </Box>
         )}
-        
+
 
         {/* INPUT */}
         {stage !== "WELCOME" && !showUpload && !showConfirm && !chatCompleted && (
-          <Box sx={{ p: 1.5, display: "flex", gap: 1 }}>
+          <Box sx={{ p: 2, display: "flex", gap: 1.5, borderTop: "1px solid #E0E0E0", backgroundColor: "#fff" }}>
             <TextField
               fullWidth
-              size="small"
+              size="medium"
               placeholder="Type your message…"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSend()}
+              sx={{
+                "& .MuiOutlinedInput-root": { borderRadius: "999px" },
+                "& input": { fontSize: 15, py: 1.2 },
+              }}
             />
             <IconButton
               onClick={handleSend}
-              sx={{ backgroundColor: "#4F8787", color: "#fff" }}
+              sx={{ backgroundColor: "#4F8787", color: "#fff", width: 48, height: 48, alignSelf: "center", "&:hover": { backgroundColor: "#355E60" } }}
             >
               <SendIcon />
             </IconButton>
