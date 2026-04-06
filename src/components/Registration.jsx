@@ -13,6 +13,7 @@ import {
   TextField,
   Toolbar,
   Typography,
+  Button,
 } from "@mui/material";
 import { Grid } from "@mui/material";
 import ArrowBack from "@mui/icons-material/ArrowBack";
@@ -66,19 +67,22 @@ const Registration = () => {
     navigate("/ais/login");
   };
 
-  const [claimantName, setClaimantName] = useState("");
-  const [claimantType, setClaimantType] = useState("");
+  const [patientName, setPatientName] = useState("");
+  const [patientType, setPatientType] = useState("");
+  const [patientId, setPatientId] = useState("");
+  const [icdCode, setIcdCode] = useState("");
   const [relationship, setRelationship] = useState("");
   const [gender, setGender] = useState("");
-  const [ssnNumber, setSsnNumber] = useState("");
   const [errors, setErrors] = useState({});
+  const [submitStatus, setSubmitStatus] = useState("none"); // none, error, approved
 
   const [policyDetails, setPolicyDetails] = useState(null);
   const [loadingPolicy, setLoadingPolicy] = useState(false);
   const [policyError, setPolicyError] = useState("");
 
   const fetchPolicyDetails = async () => {
-    if (ssnNumber.length !== 11) return;
+    // If patientId is provided, we fetch policy (bypassing strict 11 char SSN rule for mock purposes)
+    if (!patientId || patientId.length < 5) return;
 
     const token = localStorage.getItem("access_token");
     const baseUrl = import.meta.env.VITE_API_BASE_URL;
@@ -90,7 +94,7 @@ const Registration = () => {
 
     try {
       const response = await fetch(
-        `${baseUrl}/healthcare/getPolicydetailsByssn?SSN=${ssnNumber}`,
+        `${baseUrl}/healthcare/getPolicydetailsByssn?SSN=${patientId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -112,31 +116,35 @@ const Registration = () => {
 
 
   useEffect(() => {
-    if (ssnNumber.length === 11 && !policyDetails && !loadingPolicy) {
+    if (patientId && patientId.length >= 5 && !policyDetails && !loadingPolicy) {
       fetchPolicyDetails();
     }
-  }, [ssnNumber]);
+  }, [patientId]);
 
   const validateForm = () => {
     let newErrors = {};
 
-    if (!claimantName.trim()) {
-      newErrors.claimantName = "Enter claimant name";
+    if (!patientName.trim()) {
+      newErrors.patientName = "Enter patient name";
     }
 
-    if (!claimantType) {
-      newErrors.claimantType = "Select claimant type";
+    if (!patientType) {
+      newErrors.patientType = "Select patient type";
     }
 
-    if (!ssnNumber || ssnNumber.length !== 11) {
-      newErrors.ssnNumber = "Enter valid SSN (11 digits)";
+    if (!patientId) {
+      newErrors.patientId = "Enter Patient ID";
+    }
+
+    if (!icdCode) {
+      newErrors.icdCode = "Enter ICD Code";
     }
 
     if (!gender) {
       newErrors.gender = "Select gender";
     }
 
-    if (claimantType === "family" && !relationship) {
+    if (patientType === "family" && !relationship) {
       newErrors.relationship = "Select relationship";
     }
 
@@ -211,10 +219,10 @@ const Registration = () => {
           Register Pre-Claim Approval
         </Typography>
 
-        {/* CLAIMANT DETAILS */}
+        {/* PATIENT DETAILS */}
         <Paper sx={{ p: 2.5, mb: 3, borderRadius: 2 }}>
           <Typography fontSize={18} fontWeight={700} mb={3}>
-            Claimant Details
+            Patient Details
           </Typography>
 
           <Grid container spacing={22}>
@@ -222,73 +230,74 @@ const Registration = () => {
               <Stack spacing={3}>
                 <Box>
                   <Typography fontWeight={600} mb={1}>
-                    Claimant Name
+                    Patient Name
                   </Typography>
                   <TextField
                     fullWidth
                     placeholder="Enter Full Name"
                     sx={inputStyle}
-                    value={claimantName}
-                    onChange={(e) => setClaimantName(e.target.value)}
-                    error={!!errors.claimantName}
-                    helperText={errors.claimantName}
+                    value={patientName}
+                    onChange={(e) => setPatientName(e.target.value)}
+                    error={!!errors.patientName}
+                    helperText={errors.patientName}
                   />
                 </Box>
 
                 <Box>
                   <Typography fontWeight={600} mb={1}>
-                    Claimant Type
+                    Patient Type
                   </Typography>
-                  <FormControl fullWidth sx={inputStyle} error={!!errors.claimantType}>                    <Select
-                    value={claimantType}
-                    onChange={(e) => {
-                      setClaimantType(e.target.value);
-                      setRelationship("");
-                    }}
-                    displayEmpty
-                  >
-                    <MenuItem value="" disabled>Select</MenuItem>
-                    <MenuItem value="self">Self</MenuItem>
-                    <MenuItem value="family">Family Member</MenuItem>
-                  </Select>
+                  <FormControl fullWidth sx={inputStyle} error={!!errors.patientType}>
+                    <Select
+                      value={patientType}
+                      onChange={(e) => {
+                        setPatientType(e.target.value);
+                        setRelationship("");
+                      }}
+                      displayEmpty
+                    >
+                      <MenuItem value="" disabled>Select</MenuItem>
+                      <MenuItem value="self">Self</MenuItem>
+                      <MenuItem value="family">Family Member</MenuItem>
+                    </Select>
                   </FormControl>
-                  {errors.claimantType && (
+                  {errors.patientType && (
                     <Typography color="error" fontSize={12}>
-                      {errors.claimantType}
+                      {errors.patientType}
                     </Typography>
                   )}
                 </Box>
 
                 <Box>
                   <Typography fontWeight={600} mb={1}>
-                    SSN Number
+                    Patient ID
                   </Typography>
-                    <TextField fullWidth placeholder="Enter SSN Number" sx={inputStyle} value={ssnNumber} onChange={(e) => setSsnNumber(e.target.value)} />
-
-
-                  {/* <TextField
-                    fullWidth
-                    placeholder="XXX-XX-XXXX"
-                    sx={inputStyle}
-                    value={ssnNumber}
-                    onChange={(e) => {
-                      let value = e.target.value.replace(/\D/g, ""); // remove non-numbers
-
-                      if (value.length > 9) value = value.slice(0, 9);
-
-                      let formatted = value;
-                      if (value.length > 5) {
-                        formatted = `${value.slice(0, 3)}-${value.slice(3, 5)}-${value.slice(5)}`;
-                      } else if (value.length > 3) {
-                        formatted = `${value.slice(0, 3)}-${value.slice(3)}`;
-                      }
-
-                      setSsnNumber(formatted);
-                    }}
-                    error={!!errors.ssnNumber}
-                    helperText={errors.ssnNumber}
-                  /> */}
+                  <TextField 
+                    fullWidth 
+                    placeholder="Enter Patient ID" 
+                    sx={inputStyle} 
+                    value={patientId} 
+                    onChange={(e) => setPatientId(e.target.value)} 
+                    error={!!errors.patientId}
+                    helperText={errors.patientId}
+                  />
                 </Box>
+
+                <Box>
+                  <Typography fontWeight={600} mb={1}>
+                    ICD Code
+                  </Typography>
+                  <TextField 
+                    fullWidth 
+                    placeholder="Enter ICD Code (e.g. G56.01)" 
+                    sx={inputStyle} 
+                    value={icdCode} 
+                    onChange={(e) => setIcdCode(e.target.value)} 
+                    error={!!errors.icdCode}
+                    helperText={errors.icdCode}
+                  />
+                </Box>
+
               </Stack>
             </Grid>
 
@@ -455,41 +464,114 @@ const Registration = () => {
 
         </Paper>
 
-        {/* DOCUMENTS – ALWAYS VISIBLE */}
-        <Paper sx={{ p: 2, borderRadius: 2 }}>
-          <Typography fontSize={18} fontWeight={700} mb={3}>Documents</Typography>
-
+        {/* AI SUMMARY (MOCK) */}
+        {policyDetails && icdCode === "G56.01" && (
           <Box
-            onClick={() => {
-              if (!validateForm()) return;
-              navigate("/upload-documents");
-            }} sx={{
-              border: "1.5px dashed #B0D8E7",
+            sx={{
+              mb: 3,
+              p: 3,
+              backgroundColor: "#E8F5E9",
               borderRadius: 2,
-              p: 5,
-              textAlign: "center",
-              cursor: "pointer",
+              border: "1px solid #C8E6C9"
             }}
           >
-
-            <Box component="img" src={cloudUploadIcon} sx={{ width: 40, mb: 2 }} />
-            <Typography fontSize={13}>Click to upload or drag and drop</Typography>
-            <Typography fontSize={11} color="text.secondary">
-              PDF, JPG or PNG (Max. 10MB)
+            <Typography fontSize={16} fontWeight={700} color="#2E7D32" mb={1}>
+              AI Summary &amp; Findings
+            </Typography>
+            <Typography fontSize={14} color="#1B5E20">
+              <strong>Finding:</strong> Carpal Tunnel Syndrome detected in recent clinical notes.<br/>
+              <strong>Proposed Treatment:</strong> Carpal Tunnel Release Surgery.<br/>
+              <strong>Validation:</strong> All required radiology and physician notes correspond with the requested limit.
             </Typography>
           </Box>
+        )}
 
-          {!policyDetails && (
-            <Typography mt={2} fontSize={12} color="text.secondary">
-              Upload enabled only after valid policy verification
+        {/* DOCUMENTS – ALWAYS VISIBLE BUT SKIPPED ON AUTO-APPROVE */}
+        {submitStatus !== "approved" && (
+          <Paper sx={{ p: 2, borderRadius: 2 }}>
+            <Typography fontSize={18} fontWeight={700} mb={3}>Documents</Typography>
+
+            <Box
+              onClick={() => {
+                if (!validateForm()) return;
+                navigate("/upload-documents");
+              }} sx={{
+                border: "1.5px dashed #B0D8E7",
+                borderRadius: 2,
+                p: 5,
+                textAlign: "center",
+                cursor: "pointer",
+              }}
+            >
+              <Box component="img" src={cloudUploadIcon} sx={{ width: 40, mb: 2 }} />
+              <Typography fontSize={13}>Click to upload or drag and drop</Typography>
+              <Typography fontSize={11} color="text.secondary">
+                PDF, JPG or PNG (Max. 10MB)
+              </Typography>
+            </Box>
+
+            {!policyDetails && (
+              <Typography mt={2} fontSize={12} color="text.secondary">
+                Upload enabled only after valid policy verification
+              </Typography>
+            )}
+          </Paper>
+        )}
+
+        {/* WORKFLOW ALERTS */}
+        {submitStatus === "error" && (
+          <Box mt={3} p={2} sx={{ backgroundColor: "#FFEBEE", border: "1px solid #EF9A9A", borderRadius: 2 }}>
+            <Typography color="#C62828" fontWeight={600} fontSize={14}>
+              Doctor has not uploaded the required documents please check with him
             </Typography>
-          )}
-        </Paper>
+          </Box>
+        )}
+
+        {submitStatus === "approved" && (
+          <Box mt={3} p={3} sx={{ backgroundColor: "#E8F5E9", border: "1px solid #81C784", borderRadius: 2 }}>
+            <Typography color="#2E7D32" fontWeight={700} fontSize={16} mb={1}>
+              ✅ Claim Auto-Approved
+            </Typography>
+            <Typography color="#1B5E20" fontSize={14}>
+              Claim has been auto-approved based on AI findings and validations. A notification has been sent to the Claimant.
+            </Typography>
+          </Box>
+        )}
+
         {errors.policy && (
           <Typography color="error" fontSize={12} mt={1}>
             {errors.policy}
           </Typography>
         )}
+
+        {/* SUBMIT BUTTON */}
+        <Box sx={{ mt: 4, display: "flex", justifyContent: "flex-end" }}>
+          <Button 
+            variant="contained" 
+            sx={{ 
+              backgroundColor: "#48868B", 
+              "&:hover": { backgroundColor: "#3a6c70" },
+              px: 4,
+              py: 1.5,
+              borderRadius: "8px",
+              textTransform: "none",
+              fontWeight: 600
+            }} 
+            onClick={() => {
+              if (!validateForm()) return;
+              
+              if (icdCode === "S82.0") {
+                setSubmitStatus("error");
+              } else if (icdCode === "G56.01") {
+                setSubmitStatus("approved");
+              } else {
+                navigate("/upload-documents");
+              }
+            }}
+          >
+            Submit Pre-Claim
+          </Button>
+        </Box>
       </Box>
     </Box>
   );

@@ -3,6 +3,8 @@ import WebPortal from "./components/WebPortal";
 import Login from "./components/Login";
 import Registration from "./components/Registration";
 import UploadDocuments from "./components/UploadDocuments";
+import DoctorUploadDocuments from "./components/DoctorUploadDocuments";
+import DoctorAIAnalysis from "./components/DoctorAIAnalysis";
 import Workpool from "./components/workpool";
 import Chatbot from "./components/Chatbot";
 import ClaimSummary from "./components/ClaimSummary";
@@ -81,11 +83,28 @@ export default function App() {
         }
       />
 
+      <Route
+        path="/doctor-upload/:patientId"
+        element={
+          <RoleProtectedRoute allowedRoles={["DOCTOR"]}>
+            <DoctorUploadDocuments />
+          </RoleProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/doctor-ai-analysis/:patientId"
+        element={
+          <RoleProtectedRoute allowedRoles={["DOCTOR"]}>
+            <DoctorAIAnalysis />
+          </RoleProtectedRoute>
+        }
+      />
 
       <Route
         path="/workpool"
         element={
-          <RoleProtectedRoute allowedRoles={["ASSESSOR", "MANAGER", "FINANCE"]}>
+          <RoleProtectedRoute allowedRoles={["ASSESSOR", "MANAGER", "FINANCE", "DOCTOR"]}>
             <Workpool />
           </RoleProtectedRoute>
         }
