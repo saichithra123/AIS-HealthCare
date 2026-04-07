@@ -201,7 +201,7 @@ const Registration = () => {
         }}
       >
         <Box
-          onClick={() => navigate("/login")}
+          onClick={() => navigate("/")}
           sx={{ display: "flex", alignItems: "center", gap: 1, cursor: "pointer", mb: 2 }}
         >
           <ArrowBack fontSize="small" /> Back

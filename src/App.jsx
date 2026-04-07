@@ -31,34 +31,12 @@ function RoleProtectedRoute({ children, allowedRoles }) {
 
 
 export default function App() {
-  const token = localStorage.getItem("access_token");
-  const role = localStorage.getItem("userRole");
-
   return (
     <Routes>
 
+      <Route path="/" element={<WebPortal />} />
 
-      <Route
-        path="/"
-        element={
-          token
-            ? role === "CUSTOMER"
-              ? <Navigate to="/registration" />
-              : <Navigate to="/workpool" />
-            : <WebPortal />
-        }
-      />
-
-      <Route
-        path="/login"
-        element={
-          token
-            ? role === "CUSTOMER"
-              ? <Navigate to="/registration" />
-              : <Navigate to="/workpool" />
-            : <Login />
-        }
-      />
+      <Route path="/login" element={<Login />} />
 
       <Route path="/chatbot" element={<Chatbot />} />
 
@@ -132,16 +110,7 @@ export default function App() {
 
     
 
-      <Route
-        path="*"
-        element={
-          token
-            ? role === "CUSTOMER"
-              ? <Navigate to="/registration" />
-              : <Navigate to="/workpool" />
-            : <Navigate to="/" />
-        }
-      />
+      <Route path="*" element={<Navigate to="/" />} />
 
     </Routes>
   );

@@ -8,6 +8,13 @@ const KEYCLOAK_BASE_URL = import.meta.env.VITE_KEYCLOAK_BASE_URL;
 const REALM = import.meta.env.VITE_KEYCLOAK_REALM;
 const CLIENT_ID = import.meta.env.VITE_KEYCLOAK_CLIENT_ID;
 
+if (!API_BASE_URL) {
+  console.error("VITE_API_BASE_URL is not configured. API calls will fail.");
+}
+if (!KEYCLOAK_BASE_URL) {
+  console.error("VITE_KEYCLOAK_BASE_URL is not configured. Auth will fail.");
+}
+
 /* =========================================================
    🔁 Refresh Access Token
 ========================================================= */
@@ -71,7 +78,7 @@ export async function authFetch(url, options = {}) {
     if (!newToken) {
       // 🔐 Session invalid → force login
       localStorage.clear();
-      window.location.href = "/login";
+      window.location.href = "/ais/login";
       return;
     }
 
